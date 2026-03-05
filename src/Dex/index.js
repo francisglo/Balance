@@ -4,7 +4,7 @@ import './Dex.css';
 
 const STORAGE_KEY = 'BALANCE_V1_dex';
 const DEX_USER_KEY = 'BALANCE_V1_dex_user';
-const DEX_SERVER_URL = process.env.REACT_APP_DEX_SERVER_URL || 'http://localhost:4000';
+const DEX_SERVER_URL = (process.env.REACT_APP_DEX_SERVER_URL || 'http://localhost:4000').trim();
 
 const defaultState = {
   user: { name: 'Tú', id: 'user_me' },
@@ -73,7 +73,7 @@ function getOrCreateDexUser(initialName) {
   return generated;
 }
 
-export default function Dex({ username }) {
+export default function Dex({ username, sessionToken }) {
   const [state, setState] = React.useState(loadState);
   const [dexUser, setDexUser] = React.useState(() => getOrCreateDexUser(username));
   const [isRealtimeConnected, setIsRealtimeConnected] = React.useState(false);
@@ -92,6 +92,23 @@ export default function Dex({ username }) {
   const activeIdRef = React.useRef(activeId);
   const loadedHistoryRef = React.useRef(new Set());
   const activeThreadLength = state.messages[activeId]?.length || 0;
+
+  const apiRequest = React.useCallback(async (path, method = 'GET', body = null) => {
+    const response = await fetch(`${DEX_SERVER_URL}${path}`, {
+      method,
+      headers: {
+        'Content-Type': 'application/json',
+        ...(sessionToken ? { Authorization: `Bearer ${sessionToken}` } : {}),
+      },
+      ...(body ? { body: JSON.stringify(body) } : {}),
+    });
+
+    const payload = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      throw new Error(payload.error || 'Error de conexión Dex.');
+    }
+    return payload;
+  }, [sessionToken]);
 
   React.useEffect(() => {
     activeIdRef.current = activeId;
@@ -174,6 +191,102 @@ export default function Dex({ username }) {
 
     return () => controller.abort();
   }, [activeId, dexUser, isRealtimeConnected, state.contacts]);
+
+  React.useEffect(() => {
+    if (!activeId) return;
+    const contact = state.contacts.find(c => c.id === activeId);
+    if (!contact?.isRemote) return;
+
+    let cancelled = false;
+
+    const pullHistory = async () => {
+      try {
+        const data = await apiRequest(`/dex/history?user=${encodeURIComponent(dexUser)}&peer=${encodeURIComponent(contact.name)}`);
+        if (cancelled) return;
+
+        const messages = Array.isArray(data?.messages) ? data.messages : [];
+        const normalized = messages.map((item) => {
+          const date = new Date(item.timestamp || Date.now());
+          const isMine = item.from === dexUser;
+          return {
+            id: item.id || `m_${date.getTime()}`,
+            from: isMine ? 'Tú' : contact.name,
+            text: item.text || '',
+            time: date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+            timestamp: date.toISOString(),
+            read: !isMine || item.read !== false,
+          };
+        });
+
+        setState(prev => {
+          const existing = prev.messages[activeId] || [];
+          const existingIds = new Set(existing.map(m => m.id));
+          const merged = [...existing, ...normalized.filter(m => !existingIds.has(m.id))]
+            .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
+
+          return {
+            ...prev,
+            messages: {
+              ...prev.messages,
+              [activeId]: merged,
+            },
+          };
+        });
+      } catch {
+        // noop
+      }
+    };
+
+    pullHistory();
+    const pollId = setInterval(pullHistory, isRealtimeConnected ? 8000 : 4000);
+
+    return () => {
+      cancelled = true;
+      clearInterval(pollId);
+    };
+  }, [activeId, apiRequest, dexUser, isRealtimeConnected, state.contacts]);
+
+  React.useEffect(() => {
+    if (!sessionToken) return;
+    let cancelled = false;
+
+    const loadUsers = async () => {
+      try {
+        const payload = await apiRequest('/auth/users');
+        if (cancelled) return;
+        const current = (dexUser || '').toLowerCase();
+        const remoteUsers = (payload.users || [])
+          .filter(user => (user.username || '').toLowerCase() !== current)
+          .map(user => ({
+            id: `remote:${user.username}`,
+            name: user.username,
+            status: user.online ? 'En línea' : 'Offline',
+            lastSeen: new Date().toISOString(),
+            isRemote: true,
+          }));
+
+        setState(prev => {
+          const localContacts = prev.contacts.filter(c => !c.isRemote);
+          const remoteMap = new Map(prev.contacts.filter(c => c.isRemote).map(c => [c.id, c]));
+          remoteUsers.forEach(user => remoteMap.set(user.id, user));
+
+          return {
+            ...prev,
+            contacts: [...localContacts, ...Array.from(remoteMap.values())],
+          };
+        });
+      } catch {
+        // noop
+      }
+    };
+
+    loadUsers();
+    const id = setInterval(loadUsers, 15000);
+    return () => {
+      cancelled = true;
+      clearInterval(id);
+    };
+  }, [apiRequest, dexUser, sessionToken]);
 
   React.useEffect(() => {
     return () => {
@@ -372,6 +485,19 @@ export default function Dex({ username }) {
         to: targetContact.name,
         text: message.trim(),
         clientId: newMsg.id,
+      });
+      setMessage('');
+      return;
+    }
+
+    if (isRemoteTarget) {
+      apiRequest('/dex/message', 'POST', {
+        id: newMsg.id,
+        from: dexUser,
+        to: targetContact.name,
+        text: message.trim(),
+      }).catch(() => {
+        // noop
       });
       setMessage('');
       return;

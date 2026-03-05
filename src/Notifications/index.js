@@ -1,7 +1,7 @@
 import React from 'react';
 import './Notifications.css';
 
-const API_BASE_URL = process.env.REACT_APP_DEX_SERVER_URL || 'http://localhost:4000';
+const API_BASE_URL = (process.env.REACT_APP_DEX_SERVER_URL || 'http://localhost:4000').trim();
 const SOUND_PREF_KEY = 'BALANCE_NOTIFICATIONS_SOUND_ENABLED';
 const SOUND_LEVEL_KEY = 'BALANCE_NOTIFICATIONS_SOUND_LEVEL';
 const ALERT_MODE_KEY = 'BALANCE_NOTIFICATIONS_ALERT_MODE';

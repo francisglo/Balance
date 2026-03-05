@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Auth.css';
 
-const API_BASE_URL = process.env.REACT_APP_DEX_SERVER_URL || 'http://localhost:4000';
+const API_BASE_URL = (process.env.REACT_APP_DEX_SERVER_URL || 'http://localhost:4000').trim();
 
 export default function Login({ onLogin, onGoogleLogin }) {
   const navigate = useNavigate();

@@ -9,7 +9,7 @@ import Register from '../Auth/Register';
 import OpeningSplash from '../OpeningSplash';
 
 const SESSION_KEY = 'BALANCE_AUTH_SESSION';
-const API_BASE_URL = process.env.REACT_APP_DEX_SERVER_URL || 'http://localhost:4000';
+const API_BASE_URL = (process.env.REACT_APP_DEX_SERVER_URL || 'http://localhost:4000').trim();
 
 function getSession() {
   const raw = localStorage.getItem(SESSION_KEY);

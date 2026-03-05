@@ -2,7 +2,7 @@ import React from 'react';
 import './Coworking.css';
 
 const STORAGE_KEY = 'BALANCE_V1_coworking';
-const API_BASE_URL = process.env.REACT_APP_DEX_SERVER_URL || 'http://localhost:4000';
+const API_BASE_URL = (process.env.REACT_APP_DEX_SERVER_URL || 'http://localhost:4000').trim();
 
 const defaultState = {
   currentUser: { id: 'user_me', name: 'Tú', status: 'idle', currentTask: '', avatar: '👤' },

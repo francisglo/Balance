@@ -632,7 +632,40 @@ app.get('/notifications/reminders/poll', (req, res) => {
 });
 
 app.get('/dex/users', (_, res) => {
-  res.json({ users: Array.from(userToSocket.keys()) });
+  const connected = new Set(Array.from(userToSocket.keys()));
+  const users = Object.values(db.users)
+    .map((user) => ({
+      username: sanitize(user.username),
+      online: connected.has(sanitize(user.username)),
+    }))
+    .filter((user) => !!user.username);
+
+  res.json({ users });
+});
+
+app.post('/dex/message', (req, res) => {
+  const from = sanitize(req.body?.from);
+  const to = sanitize(req.body?.to);
+  const text = sanitize(req.body?.text);
+  const incomingId = sanitize(req.body?.id);
+
+  if (!from || !to || !text) {
+    return res.status(400).json({ ok: false, error: 'from, to y text son requeridos.' });
+  }
+
+  const payload = {
+    id: incomingId || `m_${Date.now()}_${Math.floor(Math.random() * 9999)}`,
+    from,
+    to,
+    text,
+    timestamp: new Date().toISOString(),
+  };
+
+  const key = conversationKey(from, to);
+  db.conversations[key] = [...(db.conversations[key] || []), payload].slice(-MAX_MESSAGES_PER_CONVERSATION);
+  saveDb(db);
+
+  return res.status(201).json({ ok: true, message: payload, conversationId: key });
 });
 
 app.get('/dex/db/stats', (_, res) => {
@@ -713,14 +746,6 @@ app.delete('/dex/history', (req, res) => {
   return res.json({ ok: true });
 });
 
-const server = http.createServer(app);
-const io = new Server(server, {
-  cors: {
-    origin: '*',
-    methods: ['GET', 'POST'],
-  },
-});
-
 const userToSocket = new Map();
 const socketToUser = new Map();
 
@@ -728,65 +753,77 @@ const broadcastUsers = () => {
   io.emit('dex:users', Array.from(userToSocket.keys()));
 };
 
-io.on('connection', (socket) => {
-  socket.on('dex:join', ({ username }) => {
-    const cleanName = sanitize(username);
-    if (!cleanName) return;
-
-    userToSocket.set(cleanName, socket.id);
-    socketToUser.set(socket.id, cleanName);
-    broadcastUsers();
-
-    socket.emit('dex:joined', { username: cleanName });
+if (!process.env.VERCEL) {
+  const server = http.createServer(app);
+  const io = new Server(server, {
+    cors: {
+      origin: '*',
+      methods: ['GET', 'POST'],
+    },
   });
 
-  socket.on('dex:message', ({ to, text, clientId }) => {
-    const from = socketToUser.get(socket.id);
-    const cleanTo = sanitize(to);
-    const cleanText = sanitize(text);
-    if (!from || !cleanTo || !cleanText) return;
+  io.on('connection', (socket) => {
+    socket.on('dex:join', ({ username }) => {
+      const cleanName = sanitize(username);
+      if (!cleanName) return;
 
-    const payload = {
-      id: clientId || `m_${Date.now()}`,
-      from,
-      to: cleanTo,
-      text: cleanText,
-      timestamp: new Date().toISOString(),
-    };
-
-    const key = conversationKey(from, cleanTo);
-    db.conversations[key] = [...(db.conversations[key] || []), payload].slice(-MAX_MESSAGES_PER_CONVERSATION);
-    saveDb(db);
-
-    socket.emit('dex:message:ack', payload);
-
-    const targetSocketId = userToSocket.get(cleanTo);
-    if (targetSocketId) {
-      io.to(targetSocketId).emit('dex:message', payload);
-    }
-  });
-
-  socket.on('dex:read', ({ to }) => {
-    const from = socketToUser.get(socket.id);
-    const cleanTo = sanitize(to);
-    if (!from || !cleanTo) return;
-
-    const targetSocketId = userToSocket.get(cleanTo);
-    if (targetSocketId) {
-      io.to(targetSocketId).emit('dex:read', { from });
-    }
-  });
-
-  socket.on('disconnect', () => {
-    const username = socketToUser.get(socket.id);
-    if (username) {
-      userToSocket.delete(username);
-      socketToUser.delete(socket.id);
+      userToSocket.set(cleanName, socket.id);
+      socketToUser.set(socket.id, cleanName);
       broadcastUsers();
-    }
-  });
-});
 
-server.listen(PORT, () => {
-  console.log(`Dex realtime server listening on http://localhost:${PORT}`);
-});
+      socket.emit('dex:joined', { username: cleanName });
+    });
+
+    socket.on('dex:message', ({ to, text, clientId }) => {
+      const from = socketToUser.get(socket.id);
+      const cleanTo = sanitize(to);
+      const cleanText = sanitize(text);
+      if (!from || !cleanTo || !cleanText) return;
+
+      const payload = {
+        id: clientId || `m_${Date.now()}`,
+        from,
+        to: cleanTo,
+        text: cleanText,
+        timestamp: new Date().toISOString(),
+      };
+
+      const key = conversationKey(from, cleanTo);
+      db.conversations[key] = [...(db.conversations[key] || []), payload].slice(-MAX_MESSAGES_PER_CONVERSATION);
+      saveDb(db);
+
+      socket.emit('dex:message:ack', payload);
+
+      const targetSocketId = userToSocket.get(cleanTo);
+      if (targetSocketId) {
+        io.to(targetSocketId).emit('dex:message', payload);
+      }
+    });
+
+    socket.on('dex:read', ({ to }) => {
+      const from = socketToUser.get(socket.id);
+      const cleanTo = sanitize(to);
+      if (!from || !cleanTo) return;
+
+      const targetSocketId = userToSocket.get(cleanTo);
+      if (targetSocketId) {
+        io.to(targetSocketId).emit('dex:read', { from });
+      }
+    });
+
+    socket.on('disconnect', () => {
+      const username = socketToUser.get(socket.id);
+      if (username) {
+        userToSocket.delete(username);
+        socketToUser.delete(socket.id);
+        broadcastUsers();
+      }
+    });
+  });
+
+  server.listen(PORT, () => {
+    console.log(`Dex realtime server listening on http://localhost:${PORT}`);
+  });
+}
+
+module.exports = app;
