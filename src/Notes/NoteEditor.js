@@ -2,6 +2,8 @@ import React from 'react';
 import storage from '../services/storage';
 import './Notes.css';
 
+const NOTE_PLACEHOLDER = 'Escribe aquí tu idea...';
+
 function TaskBlock({taskId}){
   const [task, setTask] = React.useState(null);
   React.useEffect(()=>{
@@ -103,9 +105,24 @@ export default function NoteEditor(){
   React.useEffect(()=>{
     setOkrs(storage.getCollection('okrs')||[]);
     if(editorRef.current && !editorRef.current.innerHTML){
-      editorRef.current.innerHTML = '<p>Escribe aquí tu idea...</p>';
+      editorRef.current.innerHTML = `<p>${NOTE_PLACEHOLDER}</p>`;
     }
   },[]);
+
+  function clearPlaceholderOnType(){
+    const editor = editorRef.current;
+    if(!editor) return;
+    const text = (editor.innerText || '').trim();
+    if(text === NOTE_PLACEHOLDER){
+      editor.innerHTML = '<p></p>';
+      const range = document.createRange();
+      const selection = window.getSelection();
+      range.selectNodeContents(editor);
+      range.collapse(true);
+      selection.removeAllRanges();
+      selection.addRange(range);
+    }
+  }
 
   function getSelectionText(){
     let sel = window.getSelection();
@@ -140,6 +157,9 @@ export default function NoteEditor(){
     if(!sel) {
       sel = editorRef.current?.innerText?.trim() || '';
     }
+    if(sel === NOTE_PLACEHOLDER) {
+      sel = '';
+    }
     if(!sel) { alert('Por favor, escribe algo en el editor primero'); return; }
     
     const now = Date.now();
@@ -172,7 +192,7 @@ export default function NoteEditor(){
         type:'note.converted', actorId:'local-user', timestamp: now, noteSnippet: sel.slice(0,200), createdParentId: parent.id
       });
       alert(`✓ Tarea "${parent.title}" + ${checklist.length-1} subtareas creadas`);
-      editorRef.current.innerHTML = '<p>Escribe aquí tu idea...</p>';
+      editorRef.current.innerHTML = `<p>${NOTE_PLACEHOLDER}</p>`;
       return;
     }
     
@@ -187,7 +207,7 @@ export default function NoteEditor(){
     });
     storage.addItem('activity', { type:'note.converted', actorId:'local-user', timestamp:now, noteSnippet: sel.slice(0,200), createdTaskId: t.id });
     alert(`✓ Tarea creada: "${t.title}"`);
-    editorRef.current.innerHTML = '<p>Escribe aquí tu idea...</p>';
+    editorRef.current.innerHTML = `<p>${NOTE_PLACEHOLDER}</p>`;
   }
 
   const [linkOkr, setLinkOkr] = React.useState('');
@@ -219,9 +239,19 @@ export default function NoteEditor(){
         contentEditable
         suppressContentEditableWarning
         ref={editorRef}
+        onFocus={clearPlaceholderOnType}
+        onBeforeInput={clearPlaceholderOnType}
         onInput={handleEditorUpdate}
         onMouseUp={handleEditorUpdate}
         onKeyUp={handleEditorUpdate}
+        onBlur={() => {
+          const editor = editorRef.current;
+          if(!editor) return;
+          const text = (editor.innerText || '').trim();
+          if(!text){
+            editor.innerHTML = `<p>${NOTE_PLACEHOLDER}</p>`;
+          }
+        }}
       />
 
       <div className="NoteEditor-blocks">

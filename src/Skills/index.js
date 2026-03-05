@@ -36,8 +36,20 @@ export default function SkillsPortfolio() {
   const [selectedCategory, setSelectedCategory] = React.useState('all');
 
   React.useEffect(() => {
-    const data = skillsService.getPortfolio();
-    setPortfolio(data);
+    const refresh = () => {
+      const data = skillsService.getPortfolio();
+      setPortfolio(data);
+    };
+
+    refresh();
+    const id = setInterval(refresh, 1500);
+    const onStorage = () => refresh();
+    window.addEventListener('storage', onStorage);
+
+    return () => {
+      clearInterval(id);
+      window.removeEventListener('storage', onStorage);
+    };
   }, []);
 
   if (!portfolio) {

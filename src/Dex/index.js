@@ -61,7 +61,11 @@ function getStatusColor(status) {
   return map[status] || '#9ca3af';
 }
 
-function getOrCreateDexUser() {
+function getOrCreateDexUser(initialName) {
+  if (initialName && initialName.trim()) {
+    localStorage.setItem(DEX_USER_KEY, initialName.trim());
+    return initialName.trim();
+  }
   const saved = localStorage.getItem(DEX_USER_KEY);
   if (saved) return saved;
   const generated = `User${Math.floor(Math.random() * 9000 + 1000)}`;
@@ -69,9 +73,9 @@ function getOrCreateDexUser() {
   return generated;
 }
 
-export default function Dex() {
+export default function Dex({ username }) {
   const [state, setState] = React.useState(loadState);
-  const [dexUser] = React.useState(getOrCreateDexUser);
+  const [dexUser, setDexUser] = React.useState(() => getOrCreateDexUser(username));
   const [isRealtimeConnected, setIsRealtimeConnected] = React.useState(false);
   const [activeId, setActiveId] = React.useState(state.contacts[0]?.id || '');
   const [message, setMessage] = React.useState('');
@@ -92,6 +96,17 @@ export default function Dex() {
   React.useEffect(() => {
     activeIdRef.current = activeId;
   }, [activeId]);
+
+  React.useEffect(() => {
+    if (!username || !username.trim()) return;
+    const cleanUser = username.trim();
+    setDexUser(cleanUser);
+    localStorage.setItem(DEX_USER_KEY, cleanUser);
+    setState(prev => ({
+      ...prev,
+      user: { ...prev.user, name: cleanUser },
+    }));
+  }, [username]);
 
   React.useEffect(() => {
     saveState(state);

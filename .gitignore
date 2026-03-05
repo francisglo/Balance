@@ -29,3 +29,4 @@ yarn-error.log*
 /server/backups/
 /server/dex-data.json
 .vscode
+.vercel

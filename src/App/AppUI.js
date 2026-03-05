@@ -75,6 +75,11 @@ function AppUI({ onLogout, username, sessionToken }) {
           <div className="AppUI-layout">
             <div className="AppUI-main">
               <div className="AppUI-topbar">
+                <img
+                  src={`${process.env.PUBLIC_URL}/balance.gif`}
+                  alt="Balance logo dinámico"
+                  className="AppUI-logo"
+                />
                 <button className='btn' onClick={()=>setDropdownOpen(!dropdownOpen)}>☰ {viewLabels[view]}</button>
                 <Link to="/finance" className="btn" style={{textDecoration:'none'}}>💰 Finanzas</Link>
                 {username && <span className="muted">👤 {username}</span>}
@@ -102,9 +107,9 @@ function AppUI({ onLogout, username, sessionToken }) {
               {view === 'canvas' && <Canvas />}
               {view === 'skills' && <SkillsPortfolio />}
               {view === 'strategy' && <StrategyHub />}
-              {view === 'dex' && <Dex />}
+              {view === 'dex' && <Dex username={username} sessionToken={sessionToken} />}
               {view === 'notifications' && <Notifications sessionToken={sessionToken} />}
-              {view === 'coworking' && <CoworkingSpace />}
+              {view === 'coworking' && <CoworkingSpace username={username} sessionToken={sessionToken} />}
               {view === 'documents' && <DocumentSuite />}
               {view === 'kanban' && (
                 <>

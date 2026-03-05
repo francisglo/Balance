@@ -80,6 +80,14 @@
   text-shadow: 0 0 20px rgba(0,209,255,0.3);
 }
 
+.ProductivityDashboard-titleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 0.75rem;
+}
+
 .ProductivityDashboard-container {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));

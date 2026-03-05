@@ -468,6 +468,26 @@ app.get('/auth/me', (req, res) => {
   return res.json({ ok: true, user: { username: session.username } });
 });
 
+app.get('/auth/users', (req, res) => {
+  const session = requireSession(req, res);
+  if (!session) return;
+
+  const users = Object.values(db.users)
+    .map((user) => {
+      const cleanUsername = sanitize(user.username);
+      return {
+        username: cleanUsername,
+        provider: sanitize(user.authProvider) || 'local',
+        createdAt: sanitize(user.createdAt) || null,
+        online: userToSocket.has(cleanUsername),
+      };
+    })
+    .filter(user => !!user.username)
+    .sort((a, b) => a.username.localeCompare(b.username));
+
+  return res.json({ ok: true, users });
+});
+
 app.post('/auth/logout', (req, res) => {
   const session = getSessionFromRequest(req);
   if (session?.token && db.sessions[session.token]) {

@@ -124,6 +124,8 @@ function SimpleLineChart({ label, values, color }) {
 
 function ProductivityDashboard() {
   const [chartType, setChartType] = React.useState('bar');
+  const [showSummary, setShowSummary] = React.useState(true);
+  const [showFlow, setShowFlow] = React.useState(true);
   const [activitySeries, setActivitySeries] = React.useState([]);
   const [metrics, setMetrics] = React.useState({
     totalTasks: 0,
@@ -223,9 +225,14 @@ function ProductivityDashboard() {
 
   return (
     <div className="ProductivityDashboard">
-      <h2 className="ProductivityDashboard-title">📊 Dashboard de Desempeño</h2>
+      <div className="ProductivityDashboard-titleRow">
+        <h2 className="ProductivityDashboard-title">📊 Dashboard de Desempeño</h2>
+        <button className="btn" onClick={() => setShowSummary(prev => !prev)}>
+          {showSummary ? 'Plegar dashboard' : 'Desplegar dashboard'}
+        </button>
+      </div>
 
-      <div className="ProductivityDashboard-container">
+      {showSummary && <div className="ProductivityDashboard-container">
         {/* Score Principal */}
         <div className="MetricCard MetricCard--primary">
           <div className="MetricCard-header">
@@ -271,13 +278,16 @@ function ProductivityDashboard() {
             </p>
           </div>
         </div>
-      </div>
+      </div>}
 
       {/* Gráficas */}
       <div className="ProductivityDashboard-charts">
         <div className="ProductivityDashboard-chartsHeader">
           <h3>Estado del Flujo</h3>
           <div className="ProductivityDashboard-chartControls">
+            <button className="btn" onClick={() => setShowFlow(prev => !prev)}>
+              {showFlow ? 'Plegar estado de flujo' : 'Desplegar estado de flujo'}
+            </button>
             <label>Tipo de gráfica:</label>
             <select value={chartType} onChange={e => setChartType(e.target.value)} className="ProductivityDashboard-chartSelect">
               <option value="bar">Barras</option>
@@ -289,6 +299,7 @@ function ProductivityDashboard() {
           </div>
         </div>
 
+        {showFlow && <>
         <div className="ProductivityDashboard-chartsGrid">
           {chartType === 'bar' && (
             <SimpleBarChart label="Tareas por Estado" values={flowValues} colors={flowColors} />
@@ -317,6 +328,7 @@ function ProductivityDashboard() {
             </div>
           ))}
         </div>
+        </>}
       </div>
     </div>
   );

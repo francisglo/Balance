@@ -2,6 +2,7 @@ import React from 'react';
 import './Coworking.css';
 
 const STORAGE_KEY = 'BALANCE_V1_coworking';
+const API_BASE_URL = process.env.REACT_APP_DEX_SERVER_URL || 'http://localhost:4000';
 
 const defaultState = {
   currentUser: { id: 'user_me', name: 'Tú', status: 'idle', currentTask: '', avatar: '👤' },
@@ -52,7 +53,13 @@ function getStatusColor(status) {
   return map[status] || '#9ca3af';
 }
 
-export default function CoworkingSpace() {
+function avatarFromName(name = '') {
+  const options = ['👩‍💻', '🧑‍💻', '👨‍💻', '👩‍🔬', '🧑‍🔬', '👨‍🔬', '👩‍💼', '🧑‍💼', '👨‍💼'];
+  const index = Math.abs((name || '').split('').reduce((acc, ch) => acc + ch.charCodeAt(0), 0)) % options.length;
+  return options[index];
+}
+
+export default function CoworkingSpace({ username, sessionToken }) {
   const [state, setState] = React.useState(loadState);
   const [activeSession, setActiveSession] = React.useState(state.sessions[0]?.id || null);
   const [userStatus, setUserStatus] = React.useState('idle');
@@ -61,6 +68,61 @@ export default function CoworkingSpace() {
   const [newSessionName, setNewSessionName] = React.useState('');
   const [showNewSession, setShowNewSession] = React.useState(false);
   const [selectedSessionType, setSelectedSessionType] = React.useState('pomodoro');
+
+  React.useEffect(() => {
+    if (!username) return;
+    setState(prev => ({
+      ...prev,
+      currentUser: {
+        ...prev.currentUser,
+        name: username,
+        avatar: avatarFromName(username),
+      },
+    }));
+  }, [username]);
+
+  React.useEffect(() => {
+    if (!sessionToken) return;
+
+    let cancelled = false;
+
+    const loadUsers = async () => {
+      try {
+        const response = await fetch(`${API_BASE_URL}/auth/users`, {
+          headers: {
+            Authorization: `Bearer ${sessionToken}`,
+          },
+        });
+        const payload = await response.json();
+        if (!response.ok || !payload.ok || cancelled) return;
+
+        const currentName = (username || state.currentUser.name || '').toLowerCase();
+        const mapped = (payload.users || [])
+          .filter(user => (user.username || '').toLowerCase() !== currentName)
+          .map(user => ({
+            id: `col_${user.username}`,
+            name: user.username,
+            status: user.online ? 'focus' : 'idle',
+            currentTask: user.online ? 'Disponible en coworking' : '',
+            avatar: avatarFromName(user.username),
+          }));
+
+        setState(prev => ({
+          ...prev,
+          colleagues: mapped,
+        }));
+      } catch {
+        // fallback silencioso
+      }
+    };
+
+    loadUsers();
+    const intervalId = setInterval(loadUsers, 20000);
+    return () => {
+      cancelled = true;
+      clearInterval(intervalId);
+    };
+  }, [sessionToken, username, state.currentUser.name]);
 
   React.useEffect(() => {
     saveState(state);

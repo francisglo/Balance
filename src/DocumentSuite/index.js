@@ -41,6 +41,7 @@ export default function DocumentSuite() {
   const [showRenameSheet, setShowRenameSheet] = React.useState(false);
   const [renameSheetValue, setRenameSheetValue] = React.useState('');
   const editorRef = React.useRef(null);
+  const lastSyncedSheetRef = React.useRef('');
 
   // Cargar documento y hoja activos
   React.useEffect(() => {
@@ -49,7 +50,14 @@ export default function DocumentSuite() {
       setDocName(activeDoc.name);
       const activeSheet = activeDoc.sheets.find(s => s.id === activeDoc.activeSheetId);
       if (activeSheet) {
-        setContent(activeSheet.content);
+        const syncKey = `${activeDoc.id}::${activeSheet.id}::${activeSheet.content}`;
+        if (lastSyncedSheetRef.current !== syncKey) {
+          setContent(activeSheet.content || '<p></p>');
+          if (editorRef.current && editorRef.current.innerHTML !== (activeSheet.content || '<p></p>')) {
+            editorRef.current.innerHTML = activeSheet.content || '<p></p>';
+          }
+          lastSyncedSheetRef.current = syncKey;
+        }
       }
     }
   }, [state.activeDocId, state.documents]);
@@ -62,7 +70,7 @@ export default function DocumentSuite() {
   // Auto-save cada 5 segundos
   React.useEffect(() => {
     const interval = setInterval(() => {
-      if (state.activeDocId && content) {
+      if (state.activeDocId) {
         setState(prev => ({
           ...prev,
           documents: prev.documents.map(d => {
@@ -666,7 +674,6 @@ export default function DocumentSuite() {
             contentEditable={true}
             suppressContentEditableWarning={true}
             onInput={e => setContent(e.currentTarget.innerHTML)}
-            dangerouslySetInnerHTML={{ __html: content }}
           />
         </div>
       </div>

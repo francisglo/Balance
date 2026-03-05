@@ -47,6 +47,9 @@ function Notifications({ sessionToken }) {
   }, [alertMode]);
 
   const apiRequest = React.useCallback(async (path, method = 'GET', body = null) => {
+    if (!sessionToken) {
+      throw new Error('Inicia sesión para usar notificaciones.');
+    }
     const response = await fetch(`${API_BASE_URL}${path}`, {
       method,
       headers: {
@@ -90,8 +93,14 @@ function Notifications({ sessionToken }) {
   }, [apiRequest, loadNotifications]);
 
   React.useEffect(() => {
+    if (!sessionToken) {
+      setLoading(false);
+      setItems([]);
+      setError('No hay sesión activa para notificaciones.');
+      return;
+    }
     loadNotifications();
-  }, [loadNotifications]);
+  }, [loadNotifications, sessionToken]);
 
   React.useEffect(() => {
     pollReminders();
