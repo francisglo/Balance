@@ -11,8 +11,10 @@ const crypto = require('crypto');
 
 const PORT = process.env.DEX_SERVER_PORT || 4000;
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID || '';
-const DATA_PATH = path.join(__dirname, 'dex-data.json');
-const BACKUP_DIR = path.join(__dirname, 'backups');
+const IS_VERCEL = !!process.env.VERCEL;
+const DATA_ROOT = IS_VERCEL ? '/tmp' : __dirname;
+const DATA_PATH = path.join(DATA_ROOT, 'dex-data.json');
+const BACKUP_DIR = path.join(DATA_ROOT, 'backups');
 const DB_VERSION = 2;
 const SESSION_TTL_DAYS = Number(process.env.SESSION_TTL_DAYS || 14);
 const MAX_MESSAGES_PER_CONVERSATION = Number(process.env.MAX_MESSAGES_PER_CONVERSATION || 500);
