@@ -38,7 +38,7 @@ function AppUI({ onLogout, username, sessionToken }) {
     return saved ? saved === 'true' : true;
   });
   const views = ['dashboard', 'strategy', 'okrs', 'notes', 'canvas', 'skills', 'dex', 'notifications', 'coworking', 'documents', 'kanban'];
-  const viewLabels = {dashboard:'Dashboard', strategy:'Estrategia', okrs:'OKRs', notes:'Notes', canvas:'Canvas', skills:'Skills', dex:'Dex', notifications:'Notificaciones', coworking:'Coworking', documents:'Documentos', kanban:'Kanban'};
+  const viewLabels = {dashboard:'Dashboard', strategy:'Estrategia', okrs:'OKRs', notes:'Notes', canvas:'Canvas', skills:'Skills', dex:'Dex', notifications:'Notificaciones', coworking:'THINK', documents:'Documentos', kanban:'Kanban'};
 
   React.useEffect(() => {
     localStorage.setItem('BALANCE_UI_lab', String(showLab));

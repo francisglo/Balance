@@ -59,6 +59,74 @@ function avatarFromName(name = '') {
   return options[index];
 }
 
+function generateThinkInsights(rawText, fallbackPeople = []) {
+  const lines = rawText
+    .split('\n')
+    .map(line => line.trim())
+    .filter(Boolean);
+
+  const sentences = rawText
+    .replace(/\n+/g, ' ')
+    .split(/[.!?]+/)
+    .map(sentence => sentence.trim())
+    .filter(Boolean);
+
+  const lowered = lines.map(line => line.toLowerCase());
+
+  const summaryBase = lines.find((line, index) => {
+    const l = lowered[index];
+    return l.includes('decid') || l.includes('acord') || l.includes('objetivo') || l.includes('lanz');
+  }) || sentences[0] || 'Se revisaron puntos clave y se estableció dirección de ejecución.';
+
+  const decisionCandidates = lines
+    .filter((line, index) => {
+      const l = lowered[index];
+      return l.includes('decid') || l.includes('acord') || l.includes('prior') || l.includes('lanz');
+    })
+    .slice(0, 3);
+
+  const decisions = decisionCandidates.length
+    ? decisionCandidates
+    : [
+        'Definir fecha de entrega con hitos semanales.',
+        'Priorizar MVP con foco en velocidad de ejecución.',
+      ];
+
+  const taskRegex = /^[-*•]?\s*([A-Za-zÁÉÍÓÚáéíóúÑñ\s]{2,}?)\s*[:-]\s*(.+)$/;
+  const parsedTasks = lines
+    .map(line => line.match(taskRegex))
+    .filter(Boolean)
+    .slice(0, 4)
+    .map(match => ({ owner: match[1].trim(), task: match[2].trim() }));
+
+  const fallbackTasks = fallbackPeople.slice(0, 2).map((person, idx) => ({
+    owner: person.name,
+    task: idx === 0 ? 'Definir entregables de interfaz' : 'Alinear arquitectura y dependencias',
+  }));
+
+  const tasks = parsedTasks.length ? parsedTasks : fallbackTasks;
+
+  const keyIdea =
+    lines.find((line, index) => {
+      const l = lowered[index];
+      return l.includes('idea') || l.includes('ia') || l.includes('automat') || l.includes('insight');
+    }) || 'Integrar IA para acelerar decisiones y convertir reuniones en ejecución.';
+
+  return {
+    summary: summaryBase,
+    decisions,
+    tasks,
+    keyIdea,
+    map: [
+      'Tema central',
+      'Decisiones',
+      'Acciones',
+      'Riesgos',
+      'Próximo checkpoint',
+    ],
+  };
+}
+
 export default function CoworkingSpace({ username, sessionToken }) {
   const [state, setState] = React.useState(loadState);
   const [activeSession, setActiveSession] = React.useState(state.sessions[0]?.id || null);
@@ -69,6 +137,8 @@ export default function CoworkingSpace({ username, sessionToken }) {
   const [showNewSession, setShowNewSession] = React.useState(false);
   const [selectedSessionType, setSelectedSessionType] = React.useState('pomodoro');
   const currentUserName = state.currentUser?.name || '';
+  const [meetingInput, setMeetingInput] = React.useState('');
+  const [thinkResult, setThinkResult] = React.useState(null);
 
   React.useEffect(() => {
     if (!username) return;
@@ -256,12 +326,92 @@ export default function CoworkingSpace({ username, sessionToken }) {
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
+  const runThinkEngine = () => {
+    if (!meetingInput.trim()) return;
+    const insight = generateThinkInsights(meetingInput, [state.currentUser, ...state.colleagues]);
+    setThinkResult(insight);
+  };
+
   return (
     <div className="Coworking-root">
       <div className="Coworking-header">
-        <h2>👥 Coworking Space</h2>
-        <span>Sesiones colaborativas en tiempo real</span>
+        <h2>🧠 THINK — Beyond Meethink</h2>
+        <span>Reuniones inteligentes · decisiones automáticas · generación de ideas</span>
       </div>
+
+      <section className="Coworking-thinkPanel">
+        <div className="Coworking-thinkIntro">
+          <h3>Las reuniones no son para hablar. Son para pensar juntos.</h3>
+          <p>
+            THINK resume discusiones, detecta ideas clave, crea planes de acción y genera mapas mentales.
+          </p>
+        </div>
+
+        <div className="Coworking-thinkGrid">
+          <div className="Coworking-thinkComposer">
+            <label>Acta o notas de reunión</label>
+            <textarea
+              className="Coworking-thinkInput"
+              placeholder={
+                'Ejemplo:\nSe decidió lanzar el producto en junio.\nAna: diseño UI\nCarlos: arquitectura backend\nIdea clave: integrar IA para análisis de reuniones.'
+              }
+              value={meetingInput}
+              onChange={(event) => setMeetingInput(event.target.value)}
+            />
+            <button type="button" className="Coworking-btn primary" onClick={runThinkEngine}>
+              Generar Think Engine
+            </button>
+          </div>
+
+          <div className="Coworking-thinkOutput">
+            <h4>Resultado automático</h4>
+            {!thinkResult ? (
+              <div className="Coworking-thinkEmpty">Cierra una reunión y ejecuta THINK para ver resumen, decisiones y tareas.</div>
+            ) : (
+              <>
+                <div className="Coworking-thinkBlock">
+                  <strong>Resumen</strong>
+                  <p>- {thinkResult.summary}</p>
+                </div>
+
+                <div className="Coworking-thinkBlock">
+                  <strong>Decisiones</strong>
+                  <ul>
+                    {thinkResult.decisions.map((decision, index) => (
+                      <li key={`decision-${index}`}>{decision}</li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div className="Coworking-thinkBlock">
+                  <strong>Tareas</strong>
+                  <ul>
+                    {thinkResult.tasks.map((task, index) => (
+                      <li key={`task-${index}`}>
+                        {task.owner}: {task.task}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div className="Coworking-thinkBlock">
+                  <strong>Idea clave</strong>
+                  <p>- {thinkResult.keyIdea}</p>
+                </div>
+
+                <div className="Coworking-thinkBlock">
+                  <strong>Mapa de ideas</strong>
+                  <div className="Coworking-thinkMap">
+                    {thinkResult.map.map((item, index) => (
+                      <span key={`map-${index}`}>{item}</span>
+                    ))}
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      </section>
 
       <div className="Coworking-layout">
         {/* Panel de usuario */}
