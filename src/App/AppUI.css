@@ -16,6 +16,7 @@
   flex-wrap: wrap;
   align-items: center;
   margin-bottom: 12px;
+  position: relative;
 }
 
 .AppUI-logo {
@@ -52,6 +53,36 @@
   font-weight: 600;
 }
 
+.AppUI-viewMenu {
+  position: absolute;
+  top: 44px;
+  left: 0;
+  background: rgba(11,15,26,0.95);
+  border: 1px solid rgba(255,255,255,0.03);
+  border-radius: 8px;
+  min-width: 160px;
+  z-index: 999;
+  overflow: hidden;
+}
+
+.AppUI-viewMenuItem {
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+  color: #e6eef8;
+  font-weight: 400;
+  display: block;
+}
+
+.AppUI-viewMenuItem.is-active {
+  background: rgba(0,209,255,0.1);
+  color: #00d1ff;
+  font-weight: 600;
+}
+
 @media (max-width: 1200px) {
   .AppUI-layout {
     grid-template-columns: 1fr 260px;
@@ -71,5 +102,27 @@
 @media (max-width: 640px) {
   .AppUI-layout {
     gap: 12px;
+  }
+
+  .AppUI-topbar {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: stretch;
+  }
+
+  .AppUI-logo,
+  .AppUI-topbar .muted {
+    grid-column: 1 / -1;
+  }
+
+  .AppUI-topbar .btn,
+  .AppUI-topbar a.btn {
+    width: 100%;
+    text-align: center;
+  }
+
+  .AppUI-viewMenu {
+    top: 84px;
+    width: 100%;
   }
 }

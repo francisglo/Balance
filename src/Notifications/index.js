@@ -103,9 +103,35 @@ function Notifications({ sessionToken }) {
   }, [loadNotifications, sessionToken]);
 
   React.useEffect(() => {
+    let intervalId = null;
+
+    const startPolling = () => {
+      const isHidden = typeof document !== 'undefined' && document.visibilityState === 'hidden';
+      const pollMs = isHidden ? 60000 : 30000;
+      if (intervalId) clearInterval(intervalId);
+      intervalId = setInterval(pollReminders, pollMs);
+    };
+
     pollReminders();
-    const id = setInterval(pollReminders, 30000);
-    return () => clearInterval(id);
+    startPolling();
+
+    const handleVisibilityChange = () => {
+      startPolling();
+      if (typeof document === 'undefined' || document.visibilityState !== 'hidden') {
+        pollReminders();
+      }
+    };
+
+    if (typeof document !== 'undefined') {
+      document.addEventListener('visibilitychange', handleVisibilityChange);
+    }
+
+    return () => {
+      if (intervalId) clearInterval(intervalId);
+      if (typeof document !== 'undefined') {
+        document.removeEventListener('visibilitychange', handleVisibilityChange);
+      }
+    };
   }, [pollReminders]);
 
   const sendBrowserNotification = React.useCallback((item) => {

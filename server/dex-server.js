@@ -20,6 +20,14 @@ const SESSION_TTL_DAYS = Number(process.env.SESSION_TTL_DAYS || 14);
 const MAX_MESSAGES_PER_CONVERSATION = Number(process.env.MAX_MESSAGES_PER_CONVERSATION || 500);
 const BACKUP_INTERVAL_MINUTES = Number(process.env.BACKUP_INTERVAL_MINUTES || 30);
 const MAX_BACKUP_FILES = Number(process.env.MAX_BACKUP_FILES || 30);
+const JSON_BODY_LIMIT = process.env.JSON_BODY_LIMIT || '256kb';
+const MAX_USERNAME_LENGTH = Number(process.env.MAX_USERNAME_LENGTH || 80);
+const MAX_PASSWORD_LENGTH = Number(process.env.MAX_PASSWORD_LENGTH || 128);
+const MAX_MESSAGE_LENGTH = Number(process.env.MAX_MESSAGE_LENGTH || 2000);
+const RATE_LIMIT_WINDOW_MS = Number(process.env.RATE_LIMIT_WINDOW_MS || 60 * 1000);
+const RATE_LIMIT_AUTH_MAX = Number(process.env.RATE_LIMIT_AUTH_MAX || 20);
+const RATE_LIMIT_MESSAGE_MAX = Number(process.env.RATE_LIMIT_MESSAGE_MAX || 80);
+const RATE_LIMIT_NOTIFICATIONS_MAX = Number(process.env.RATE_LIMIT_NOTIFICATIONS_MAX || 120);
 const googleClient = new OAuth2Client(GOOGLE_CLIENT_ID || undefined);
 
 const createEmptyDb = () => ({
@@ -272,7 +280,43 @@ if (compactDb(db)) {
 
 const app = express();
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: JSON_BODY_LIMIT }));
+
+app.use((_, res, next) => {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'DENY');
+  res.setHeader('Referrer-Policy', 'no-referrer');
+  next();
+});
+
+const rateBuckets = new Map();
+
+const createRateLimiter = (maxRequests) => (req, res, next) => {
+  const bucketKey = `${req.ip || 'unknown'}:${req.path}:${req.method}`;
+  const now = Date.now();
+  const bucket = rateBuckets.get(bucketKey);
+
+  if (!bucket || (now - bucket.start) > RATE_LIMIT_WINDOW_MS) {
+    rateBuckets.set(bucketKey, { start: now, count: 1 });
+    return next();
+  }
+
+  if (bucket.count >= maxRequests) {
+    const retryAfter = Math.ceil((RATE_LIMIT_WINDOW_MS - (now - bucket.start)) / 1000);
+    res.setHeader('Retry-After', String(Math.max(1, retryAfter)));
+    return res.status(429).json({ ok: false, error: 'Demasiadas solicitudes, intenta de nuevo en unos segundos.' });
+  }
+
+  bucket.count += 1;
+  rateBuckets.set(bucketKey, bucket);
+  return next();
+};
+
+const authRateLimiter = createRateLimiter(RATE_LIMIT_AUTH_MAX);
+const messageRateLimiter = createRateLimiter(RATE_LIMIT_MESSAGE_MAX);
+const notificationsRateLimiter = createRateLimiter(RATE_LIMIT_NOTIFICATIONS_MAX);
+
+const isValidLength = (value, max) => sanitize(value).length <= max;
 
 app.get('/health', (_, res) => {
   res.json({
@@ -331,7 +375,7 @@ const sortNotifications = (list) => {
   });
 };
 
-app.post('/auth/register', (req, res) => {
+app.post('/auth/register', authRateLimiter, (req, res) => {
   const username = sanitize(req.body?.username);
   const password = sanitize(req.body?.password);
 
@@ -341,6 +385,14 @@ app.post('/auth/register', (req, res) => {
 
   if (password.length < 6) {
     return res.status(400).json({ ok: false, error: 'La contraseña debe tener al menos 6 caracteres.' });
+  }
+
+  if (!isValidLength(username, MAX_USERNAME_LENGTH)) {
+    return res.status(400).json({ ok: false, error: `El usuario supera el máximo de ${MAX_USERNAME_LENGTH} caracteres.` });
+  }
+
+  if (!isValidLength(password, MAX_PASSWORD_LENGTH)) {
+    return res.status(400).json({ ok: false, error: `La contraseña supera el máximo de ${MAX_PASSWORD_LENGTH} caracteres.` });
   }
 
   const key = usernameKey(username);
@@ -367,12 +419,16 @@ app.post('/auth/register', (req, res) => {
   return res.status(201).json({ ok: true, token, user: { username } });
 });
 
-app.post('/auth/login', (req, res) => {
+app.post('/auth/login', authRateLimiter, (req, res) => {
   const username = sanitize(req.body?.username);
   const password = sanitize(req.body?.password);
 
   if (!username || !password) {
     return res.status(400).json({ ok: false, error: 'Usuario y contraseña son requeridos.' });
+  }
+
+  if (!isValidLength(username, MAX_USERNAME_LENGTH) || !isValidLength(password, MAX_PASSWORD_LENGTH)) {
+    return res.status(400).json({ ok: false, error: 'Credenciales inválidas por longitud.' });
   }
 
   const key = usernameKey(username);
@@ -403,7 +459,7 @@ app.post('/auth/login', (req, res) => {
   return res.json({ ok: true, token, user: { username: user.username } });
 });
 
-app.post('/auth/google', async (req, res) => {
+app.post('/auth/google', authRateLimiter, async (req, res) => {
   const idToken = sanitize(req.body?.idToken);
   if (!idToken) {
     return res.status(400).json({ ok: false, error: 'idToken es requerido.' });
@@ -507,7 +563,7 @@ app.get('/notifications', (req, res) => {
   return res.json({ ok: true, notifications: list });
 });
 
-app.post('/notifications', (req, res) => {
+app.post('/notifications', notificationsRateLimiter, (req, res) => {
   const session = requireSession(req, res);
   if (!session) return;
 
@@ -518,6 +574,14 @@ app.post('/notifications', (req, res) => {
 
   if (!title) {
     return res.status(400).json({ ok: false, error: 'El título es requerido.' });
+  }
+
+  if (!isValidLength(title, 140)) {
+    return res.status(400).json({ ok: false, error: 'El título es demasiado largo (máximo 140).' });
+  }
+
+  if (!isValidLength(message, 2000)) {
+    return res.status(400).json({ ok: false, error: 'El mensaje es demasiado largo (máximo 2000).' });
   }
 
   const list = getNotificationList(session.username);
@@ -541,7 +605,7 @@ app.post('/notifications', (req, res) => {
   return res.status(201).json({ ok: true, notification });
 });
 
-app.patch('/notifications/:id', (req, res) => {
+app.patch('/notifications/:id', notificationsRateLimiter, (req, res) => {
   const session = requireSession(req, res);
   if (!session) return;
 
@@ -559,6 +623,14 @@ app.patch('/notifications/:id', (req, res) => {
   const type = sanitize(req.body?.type);
   const remindAt = req.body?.remindAt === null ? null : (sanitize(req.body?.remindAt) || current.remindAt);
 
+  if (title && !isValidLength(title, 140)) {
+    return res.status(400).json({ ok: false, error: 'El título es demasiado largo (máximo 140).' });
+  }
+
+  if (message && !isValidLength(message, 2000)) {
+    return res.status(400).json({ ok: false, error: 'El mensaje es demasiado largo (máximo 2000).' });
+  }
+
   list[index] = {
     ...current,
     title: title || current.title,
@@ -575,7 +647,7 @@ app.patch('/notifications/:id', (req, res) => {
   return res.json({ ok: true, notification: list[index] });
 });
 
-app.delete('/notifications/:id', (req, res) => {
+app.delete('/notifications/:id', notificationsRateLimiter, (req, res) => {
   const session = requireSession(req, res);
   if (!session) return;
 
@@ -588,7 +660,7 @@ app.delete('/notifications/:id', (req, res) => {
   return res.json({ ok: true });
 });
 
-app.post('/notifications/mark-all-read', (req, res) => {
+app.post('/notifications/mark-all-read', notificationsRateLimiter, (req, res) => {
   const session = requireSession(req, res);
   if (!session) return;
 
@@ -603,7 +675,7 @@ app.post('/notifications/mark-all-read', (req, res) => {
   return res.json({ ok: true, count: list.length });
 });
 
-app.get('/notifications/reminders/poll', (req, res) => {
+app.get('/notifications/reminders/poll', notificationsRateLimiter, (req, res) => {
   const session = requireSession(req, res);
   if (!session) return;
 
@@ -645,7 +717,7 @@ app.get('/dex/users', (_, res) => {
   res.json({ users });
 });
 
-app.post('/dex/message', (req, res) => {
+app.post('/dex/message', messageRateLimiter, (req, res) => {
   const from = sanitize(req.body?.from);
   const to = sanitize(req.body?.to);
   const text = sanitize(req.body?.text);
@@ -653,6 +725,14 @@ app.post('/dex/message', (req, res) => {
 
   if (!from || !to || !text) {
     return res.status(400).json({ ok: false, error: 'from, to y text son requeridos.' });
+  }
+
+  if (!isValidLength(from, MAX_USERNAME_LENGTH) || !isValidLength(to, MAX_USERNAME_LENGTH)) {
+    return res.status(400).json({ ok: false, error: 'Usuario origen/destino inválido por longitud.' });
+  }
+
+  if (!isValidLength(text, MAX_MESSAGE_LENGTH)) {
+    return res.status(400).json({ ok: false, error: `El mensaje supera ${MAX_MESSAGE_LENGTH} caracteres.` });
   }
 
   const payload = {

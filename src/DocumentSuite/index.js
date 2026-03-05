@@ -32,6 +32,9 @@ export default function DocumentSuite() {
   const [state, setState] = React.useState(loadState);
   const [content, setContent] = React.useState('');
   const [docName, setDocName] = React.useState('');
+  const [toolbarCollapsed, setToolbarCollapsed] = React.useState(false);
+  const [savePulse, setSavePulse] = React.useState(false);
+  const [lastSavedAt, setLastSavedAt] = React.useState(() => new Date());
   const [showNewDoc, setShowNewDoc] = React.useState(false);
   const [newDocName, setNewDocName] = React.useState('');
   const [showNewSheet, setShowNewSheet] = React.useState(false);
@@ -42,6 +45,7 @@ export default function DocumentSuite() {
   const [renameSheetValue, setRenameSheetValue] = React.useState('');
   const editorRef = React.useRef(null);
   const lastSyncedSheetRef = React.useRef('');
+  const lastAutoSavedContentRef = React.useRef('');
 
   // Cargar documento y hoja activos
   React.useEffect(() => {
@@ -50,13 +54,16 @@ export default function DocumentSuite() {
       setDocName(activeDoc.name);
       const activeSheet = activeDoc.sheets.find(s => s.id === activeDoc.activeSheetId);
       if (activeSheet) {
-        const syncKey = `${activeDoc.id}::${activeSheet.id}::${activeSheet.content}`;
+        const syncKey = `${activeDoc.id}::${activeSheet.id}`;
         if (lastSyncedSheetRef.current !== syncKey) {
-          setContent(activeSheet.content || '<p></p>');
-          if (editorRef.current && editorRef.current.innerHTML !== (activeSheet.content || '<p></p>')) {
-            editorRef.current.innerHTML = activeSheet.content || '<p></p>';
+          const nextContent = activeSheet.content || '<p></p>';
+          setContent(nextContent);
+          lastAutoSavedContentRef.current = nextContent;
+          if (editorRef.current) {
+            editorRef.current.innerHTML = nextContent;
           }
           lastSyncedSheetRef.current = syncKey;
+          setLastSavedAt(new Date(activeDoc.updatedAt || Date.now()));
         }
       }
     }
@@ -70,7 +77,8 @@ export default function DocumentSuite() {
   // Auto-save cada 5 segundos
   React.useEffect(() => {
     const interval = setInterval(() => {
-      if (state.activeDocId) {
+      if (state.activeDocId && content !== lastAutoSavedContentRef.current) {
+        const now = new Date().toISOString();
         setState(prev => ({
           ...prev,
           documents: prev.documents.map(d => {
@@ -82,16 +90,25 @@ export default function DocumentSuite() {
                     ? { ...s, content }
                     : s
                 ),
-                updatedAt: new Date().toISOString(),
+                updatedAt: now,
               };
             }
             return d;
           }),
         }));
+        lastAutoSavedContentRef.current = content;
+        setLastSavedAt(new Date(now));
+        setSavePulse(true);
       }
     }, 5000);
     return () => clearInterval(interval);
   }, [content, state.activeDocId]);
+
+  React.useEffect(() => {
+    if (!savePulse) return undefined;
+    const timeout = setTimeout(() => setSavePulse(false), 700);
+    return () => clearTimeout(timeout);
+  }, [savePulse]);
 
   const createNewDocument = (e) => {
     e.preventDefault();
@@ -347,6 +364,16 @@ export default function DocumentSuite() {
     return date.toLocaleString('es-ES', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
   };
 
+  const formatLastSaved = (date) => {
+    const diffSeconds = Math.floor((Date.now() - date.getTime()) / 1000);
+    if (diffSeconds < 10) return 'Editado hace unos segundos';
+    if (diffSeconds < 60) return `Editado hace ${diffSeconds}s`;
+    const diffMinutes = Math.floor(diffSeconds / 60);
+    if (diffMinutes < 60) return `Editado hace ${diffMinutes} min`;
+    const diffHours = Math.floor(diffMinutes / 60);
+    return `Editado hace ${diffHours} h`;
+  };
+
   const activeDoc = state.documents.find(d => d.id === state.activeDocId);
 
   return (
@@ -383,7 +410,7 @@ export default function DocumentSuite() {
             {state.documents.map(doc => (
               <div
                 key={doc.id}
-                className={`DocumentSuite-docItem ${doc.id === state.activeDocId ? 'active' : ''}`}
+                className={`DocumentSuite-docItem sidebar-item ${doc.id === state.activeDocId ? 'active' : ''}`}
               >
                 {showRenameDoc && doc.id === state.activeDocId ? (
                   <div className="DocumentSuite-renameForm">
@@ -394,8 +421,8 @@ export default function DocumentSuite() {
                       autoFocus
                     />
                     <div className="DocumentSuite-formButtons-tiny">
-                      <button onClick={() => renameDocument(doc.id, renameDocValue)}>✓</button>
-                      <button onClick={() => setShowRenameDoc(false)}>✕</button>
+                      <button type="button" onClick={() => renameDocument(doc.id, renameDocValue)}>✓</button>
+                      <button type="button" onClick={() => setShowRenameDoc(false)}>✕</button>
                     </div>
                   </div>
                 ) : (
@@ -448,9 +475,12 @@ export default function DocumentSuite() {
               {activeDoc && (
                 <>
                   <span className="DocumentSuite-createdDate">
-                    Creado: {formatDate(activeDoc.createdAt)}
+                    {formatDate(activeDoc.createdAt)}
                   </span>
-                  <span className="DocumentSuite-autoSave">💾 Auto-guardado</span>
+                  <span className="DocumentSuite-autoSave">
+                    <span className={`DocumentSuite-saveDot ${savePulse ? 'pulse' : ''}`} />
+                    {formatLastSaved(lastSavedAt)} · Auto-guardado
+                  </span>
                 </>
               )}
             </div>
@@ -536,135 +566,160 @@ export default function DocumentSuite() {
           )}
 
           {/* Toolbar de formato */}
-          <div className="DocumentSuite-toolbar">
-            <div className="DocumentSuite-toolGroup">
-              <button
-                className="tool-btn"
-                onClick={() => applyFormat('bold')}
-                title="Negrita (Ctrl+B)"
-              >
-                <strong>B</strong>
-              </button>
-              <button
-                className="tool-btn"
-                onClick={() => applyFormat('italic')}
-                title="Cursiva (Ctrl+I)"
-              >
-                <em>I</em>
-              </button>
-              <button
-                className="tool-btn"
-                onClick={() => applyFormat('underline')}
-                title="Subrayado (Ctrl+U)"
-              >
-                <u>U</u>
-              </button>
-              <button
-                className="tool-btn"
-                onClick={() => applyFormat('strikethrough')}
-                title="Tachado"
-              >
-                <s>S</s>
-              </button>
-            </div>
+          <div className="DocumentSuite-toolbarWrap">
+            <button
+              className={`DocumentSuite-toolbarToggle ${toolbarCollapsed ? 'collapsed' : ''}`}
+              onClick={() => setToolbarCollapsed(prev => !prev)}
+              title={toolbarCollapsed ? 'Mostrar herramientas de texto' : 'Ocultar herramientas de texto'}
+              type="button"
+            >
+              Aa
+            </button>
 
-            <div className="DocumentSuite-toolGroup">
-              <select
-                onChange={e => applyFormat('formatBlock', e.target.value)}
-                defaultValue="p"
-                className="tool-select"
-              >
-                <option value="p">Párrafo</option>
-                <option value="h1">Encabezado 1</option>
-                <option value="h2">Encabezado 2</option>
-                <option value="h3">Encabezado 3</option>
-                <option value="h4">Encabezado 4</option>
-                <option value="blockquote">Cita</option>
-              </select>
-            </div>
+            {!toolbarCollapsed && (
+              <div className="DocumentSuite-toolbar">
+                <div className="DocumentSuite-toolGroup">
+                  <button
+                    className="tool-btn"
+                    onClick={() => applyFormat('bold')}
+                    title="Negrita"
+                    type="button"
+                  >
+                    <strong>B</strong>
+                  </button>
+                  <button
+                    className="tool-btn"
+                    onClick={() => applyFormat('italic')}
+                    title="Cursiva"
+                    type="button"
+                  >
+                    <em>I</em>
+                  </button>
+                  <button
+                    className="tool-btn"
+                    onClick={() => applyFormat('underline')}
+                    title="Subrayado"
+                    type="button"
+                  >
+                    <u>U</u>
+                  </button>
+                  <button
+                    className="tool-btn"
+                    onClick={() => applyFormat('strikethrough')}
+                    title="Tachado"
+                    type="button"
+                  >
+                    <s>S</s>
+                  </button>
+                </div>
 
-            <div className="DocumentSuite-toolGroup">
-              <button
-                className="tool-btn"
-                onClick={() => applyFormat('insertUnorderedList')}
-                title="Lista sin ordenar"
-              >
-                • Lista
-              </button>
-              <button
-                className="tool-btn"
-                onClick={() => applyFormat('insertOrderedList')}
-                title="Lista ordenada"
-              >
-                1. Lista
-              </button>
-              <button
-                className="tool-btn"
-                onClick={() => applyFormat('indent')}
-                title="Aumentar sangría"
-              >
-                →
-              </button>
-              <button
-                className="tool-btn"
-                onClick={() => applyFormat('outdent')}
-                title="Disminuir sangría"
-              >
-                ←
-              </button>
-            </div>
+                <div className="DocumentSuite-toolGroup">
+                  <select
+                    onChange={e => applyFormat('formatBlock', e.target.value)}
+                    defaultValue="p"
+                    className="tool-select"
+                  >
+                    <option value="p">P</option>
+                    <option value="h1">H1</option>
+                    <option value="h2">H2</option>
+                    <option value="h3">H3</option>
+                    <option value="h4">H4</option>
+                    <option value="blockquote">❝</option>
+                  </select>
+                </div>
 
-            <div className="DocumentSuite-toolGroup">
-              <button
-                className="tool-btn"
-                onClick={() => applyFormat('justifyLeft')}
-                title="Alinear izquierda"
-              >
-                ⬅
-              </button>
-              <button
-                className="tool-btn"
-                onClick={() => applyFormat('justifyCenter')}
-                title="Centrar"
-              >
-                ⬍
-              </button>
-              <button
-                className="tool-btn"
-                onClick={() => applyFormat('justifyRight')}
-                title="Alinear derecha"
-              >
-                ➡
-              </button>
-              <button
-                className="tool-btn"
-                onClick={() => applyFormat('justifyFull')}
-                title="Justificar"
-              >
-                ⊟
-              </button>
-            </div>
+                <div className="DocumentSuite-toolGroup">
+                  <button
+                    className="tool-btn"
+                    onClick={() => applyFormat('insertUnorderedList')}
+                    title="Lista sin ordenar"
+                    type="button"
+                  >
+                    •
+                  </button>
+                  <button
+                    className="tool-btn"
+                    onClick={() => applyFormat('insertOrderedList')}
+                    title="Lista ordenada"
+                    type="button"
+                  >
+                    1.
+                  </button>
+                  <button
+                    className="tool-btn"
+                    onClick={() => applyFormat('indent')}
+                    title="Aumentar sangría"
+                    type="button"
+                  >
+                    →
+                  </button>
+                  <button
+                    className="tool-btn"
+                    onClick={() => applyFormat('outdent')}
+                    title="Disminuir sangría"
+                    type="button"
+                  >
+                    ←
+                  </button>
+                </div>
 
-            <div className="DocumentSuite-toolGroup">
-              <button className="tool-btn" onClick={() => applyFormat('undo')} title="Deshacer">
-                ↶
-              </button>
-              <button className="tool-btn" onClick={() => applyFormat('redo')} title="Rehacer">
-                ↷
-              </button>
-            </div>
+                <div className="DocumentSuite-toolGroup">
+                  <button
+                    className="tool-btn"
+                    onClick={() => applyFormat('justifyLeft')}
+                    title="Alinear izquierda"
+                    type="button"
+                  >
+                    ⬅
+                  </button>
+                  <button
+                    className="tool-btn"
+                    onClick={() => applyFormat('justifyCenter')}
+                    title="Centrar"
+                    type="button"
+                  >
+                    ⬍
+                  </button>
+                  <button
+                    className="tool-btn"
+                    onClick={() => applyFormat('justifyRight')}
+                    title="Alinear derecha"
+                    type="button"
+                  >
+                    ➡
+                  </button>
+                  <button
+                    className="tool-btn"
+                    onClick={() => applyFormat('justifyFull')}
+                    title="Justificar"
+                    type="button"
+                  >
+                    ⊟
+                  </button>
+                </div>
 
-            <div className="DocumentSuite-toolGroup">
-              <button className="tool-btn export" onClick={exportToPDF} title="Exportar a PDF">
-                📄 PDF
-              </button>
-              <button className="tool-btn export" onClick={exportToHTML} title="Exportar a HTML">
-                🌐 HTML
-              </button>
-              <button className="tool-btn export" onClick={exportToTXT} title="Exportar a TXT">
-                📝 TXT
-              </button>
-            </div>
+                <div className="DocumentSuite-toolGroup">
+                  <button className="tool-btn" onClick={() => applyFormat('undo')} title="Deshacer" type="button">
+                    ↶
+                  </button>
+                  <button className="tool-btn" onClick={() => applyFormat('redo')} title="Rehacer" type="button">
+                    ↷
+                  </button>
+                </div>
+
+                <div className="DocumentSuite-toolGroup">
+                  <button className="tool-btn export" onClick={exportToPDF} title="Exportar PDF" type="button">
+                    ⤓
+                  </button>
+                  <button className="tool-btn export" onClick={exportToHTML} title="Exportar HTML" type="button">
+                    {'</>'}
+                  </button>
+                  <button className="tool-btn export" onClick={exportToTXT} title="Exportar TXT" type="button">
+                    TXT
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Área de edición */}

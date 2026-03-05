@@ -90,7 +90,6 @@ export default function Dex({ username, sessionToken }) {
   const autoReplyTimeoutRef = React.useRef(null);
   const socketRef = React.useRef(null);
   const activeIdRef = React.useRef(activeId);
-  const loadedHistoryRef = React.useRef(new Set());
   const activeThreadLength = state.messages[activeId]?.length || 0;
 
   const apiRequest = React.useCallback(async (path, method = 'GET', body = null) => {
@@ -140,59 +139,6 @@ export default function Dex({ username, sessionToken }) {
   }, [isSearchOpen]);
 
   React.useEffect(() => {
-    if (!isRealtimeConnected || !activeId) return;
-    const contact = state.contacts.find(c => c.id === activeId);
-    if (!contact?.isRemote) return;
-
-    const historyKey = `${dexUser}::${contact.name}`;
-    if (loadedHistoryRef.current.has(historyKey)) return;
-
-    const controller = new AbortController();
-
-    fetch(`${DEX_SERVER_URL}/dex/history?user=${encodeURIComponent(dexUser)}&peer=${encodeURIComponent(contact.name)}`, {
-      signal: controller.signal,
-    })
-      .then(res => res.json())
-      .then((data) => {
-        const messages = Array.isArray(data?.messages) ? data.messages : [];
-        const normalized = messages.map((item) => {
-          const date = new Date(item.timestamp || Date.now());
-          const isMine = item.from === dexUser;
-          return {
-            id: item.id || `m_${date.getTime()}`,
-            from: isMine ? 'Tú' : contact.name,
-            text: item.text || '',
-            time: date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-            timestamp: date.toISOString(),
-            read: !isMine || item.read !== false,
-          };
-        });
-
-        setState(prev => {
-          const existing = prev.messages[activeId] || [];
-          const existingIds = new Set(existing.map(m => m.id));
-          const merged = [...existing, ...normalized.filter(m => !existingIds.has(m.id))]
-            .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
-
-          return {
-            ...prev,
-            messages: {
-              ...prev.messages,
-              [activeId]: merged,
-            },
-          };
-        });
-
-        loadedHistoryRef.current.add(historyKey);
-      })
-      .catch(() => {
-        // fallback local silencioso
-      });
-
-    return () => controller.abort();
-  }, [activeId, dexUser, isRealtimeConnected, state.contacts]);
-
-  React.useEffect(() => {
     if (!activeId) return;
     const contact = state.contacts.find(c => c.id === activeId);
     if (!contact?.isRemote) return;
@@ -200,6 +146,8 @@ export default function Dex({ username, sessionToken }) {
     let cancelled = false;
 
     const pullHistory = async () => {
+      if (typeof document !== 'undefined' && document.visibilityState === 'hidden') return;
+
       try {
         const data = await apiRequest(`/dex/history?user=${encodeURIComponent(dexUser)}&peer=${encodeURIComponent(contact.name)}`);
         if (cancelled) return;
@@ -238,7 +186,8 @@ export default function Dex({ username, sessionToken }) {
     };
 
     pullHistory();
-    const pollId = setInterval(pullHistory, isRealtimeConnected ? 8000 : 4000);
+    const pollMs = isRealtimeConnected ? 15000 : 7000;
+    const pollId = setInterval(pullHistory, pollMs);
 
     return () => {
       cancelled = true;
@@ -251,6 +200,8 @@ export default function Dex({ username, sessionToken }) {
     let cancelled = false;
 
     const loadUsers = async () => {
+      if (typeof document !== 'undefined' && document.visibilityState === 'hidden') return;
+
       try {
         const payload = await apiRequest('/auth/users');
         if (cancelled) return;
@@ -281,7 +232,7 @@ export default function Dex({ username, sessionToken }) {
     };
 
     loadUsers();
-    const id = setInterval(loadUsers, 15000);
+    const id = setInterval(loadUsers, 30000);
     return () => {
       cancelled = true;
       clearInterval(id);

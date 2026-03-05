@@ -91,8 +91,19 @@ function AppUI({ onLogout, username, sessionToken }) {
                 )}
               </div>
               {dropdownOpen && (
-                <div style={{position:'absolute', top:44, left:0, background:'rgba(11,15,26,0.95)', border:'1px solid rgba(255,255,255,0.03)', borderRadius:8, minWidth:160, zIndex:999}}>
-                  {views.map(v=> <button key={v} style={{width:'100%', textAlign:'left', background:v===view?'rgba(0,209,255,0.1)':'transparent', border:'none', padding:'8px 12px', cursor:'pointer', color:v===view?'#00d1ff':'#e6eef8', fontWeight:v===view?600:400, display:'block'}} onClick={()=>{setView(v); setDropdownOpen(false)}}>{viewLabels[v]}</button>)}
+                <div className="AppUI-viewMenu">
+                  {views.map(v => (
+                    <button
+                      key={v}
+                      className={`AppUI-viewMenuItem ${v === view ? 'is-active' : ''}`}
+                      onClick={() => {
+                        setView(v);
+                        setDropdownOpen(false);
+                      }}
+                    >
+                      {viewLabels[v]}
+                    </button>
+                  ))}
                 </div>
               )}
               {view === 'dashboard' && (showDashboard ? (

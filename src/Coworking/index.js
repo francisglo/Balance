@@ -87,6 +87,8 @@ export default function CoworkingSpace({ username, sessionToken }) {
     let cancelled = false;
 
     const loadUsers = async () => {
+      if (typeof document !== 'undefined' && document.visibilityState === 'hidden') return;
+
       try {
         const response = await fetch(`${API_BASE_URL}/auth/users`, {
           headers: {
@@ -117,12 +119,12 @@ export default function CoworkingSpace({ username, sessionToken }) {
     };
 
     loadUsers();
-    const intervalId = setInterval(loadUsers, 20000);
+    const intervalId = setInterval(loadUsers, 30000);
     return () => {
       cancelled = true;
       clearInterval(intervalId);
     };
-  }, [sessionToken, username, state.currentUser.name]);
+  }, [sessionToken, username]);
 
   React.useEffect(() => {
     saveState(state);
