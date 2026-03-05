@@ -68,6 +68,7 @@ export default function CoworkingSpace({ username, sessionToken }) {
   const [newSessionName, setNewSessionName] = React.useState('');
   const [showNewSession, setShowNewSession] = React.useState(false);
   const [selectedSessionType, setSelectedSessionType] = React.useState('pomodoro');
+  const currentUserName = state.currentUser?.name || '';
 
   React.useEffect(() => {
     if (!username) return;
@@ -98,7 +99,7 @@ export default function CoworkingSpace({ username, sessionToken }) {
         const payload = await response.json();
         if (!response.ok || !payload.ok || cancelled) return;
 
-        const currentName = (username || state.currentUser.name || '').toLowerCase();
+        const currentName = (username || currentUserName || '').toLowerCase();
         const mapped = (payload.users || [])
           .filter(user => (user.username || '').toLowerCase() !== currentName)
           .map(user => ({
@@ -124,7 +125,7 @@ export default function CoworkingSpace({ username, sessionToken }) {
       cancelled = true;
       clearInterval(intervalId);
     };
-  }, [sessionToken, username]);
+  }, [sessionToken, username, currentUserName]);
 
   React.useEffect(() => {
     saveState(state);
