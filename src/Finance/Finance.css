@@ -1,0 +1,229 @@
+.Finance-root {
+  padding: 2rem;
+  background: linear-gradient(180deg, #0f1724, #0b0f1a);
+  border-radius: 12px;
+  color: #e6eef8;
+}
+
+.Finance-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.Finance-header h2 {
+  color: #00d1ff;
+  margin-bottom: 0.5rem;
+}
+
+.Finance-header p {
+  color: #a8b8d0;
+  margin: 0;
+}
+
+.Finance-nav {
+  margin-top: 1rem;
+}
+
+.Finance-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.Finance-card {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(0,209,255,0.1);
+  border-radius: 10px;
+  padding: 1rem;
+  text-align: center;
+}
+
+.Finance-value {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin-top: 0.5rem;
+  color: #00d1ff;
+}
+
+.Finance-value.positive { color: #6bcf7f; }
+.Finance-value.negative { color: #ff6b6b; }
+
+.Finance-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.Finance-panel {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 10px;
+  padding: 1.5rem;
+}
+
+.Finance-panel h3 {
+  margin-top: 0;
+  color: #00d1ff;
+}
+
+.Finance-form {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.Finance-form input,
+.Finance-form select {
+  padding: 0.6rem 0.75rem;
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.03);
+  color: #e6eef8;
+}
+
+.Finance-textarea {
+  min-height: 90px;
+  resize: vertical;
+  padding: 0.6rem 0.75rem;
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.03);
+  color: #e6eef8;
+}
+
+.Finance-categories {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.Finance-category {
+  padding: 0.35rem 0.6rem;
+  border-radius: 999px;
+  background: rgba(0,209,255,0.12);
+  color: #00d1ff;
+  font-size: 0.85rem;
+}
+
+.Finance-addCategory {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.Finance-addCategory input {
+  flex: 1;
+}
+
+.Finance-transactions {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.Finance-transaction {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background: rgba(255,255,255,0.02);
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.05);
+}
+
+.Finance-transactionMeta {
+  color: #a8b8d0;
+  font-size: 0.85rem;
+}
+
+.Finance-amount {
+  font-weight: 700;
+}
+
+.Finance-amount.positive { color: #6bcf7f; }
+.Finance-amount.negative { color: #ff6b6b; }
+
+.Finance-empty {
+  text-align: center;
+  color: #a8b8d0;
+  padding: 1rem;
+}
+
+.Finance-optimizer {
+  margin-bottom: 2rem;
+}
+
+.Finance-weights {
+  display: grid;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 8px;
+  background: rgba(255,255,255,0.02);
+}
+
+.Finance-weightsTitle {
+  font-size: 0.9rem;
+  color: #a8b8d0;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.Finance-weightRow {
+  display: grid;
+  grid-template-columns: 1fr 100px;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.Finance-plan {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+
+.Finance-planSummary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  color: #a8b8d0;
+}
+
+.Finance-planBuckets {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  color: #a8b8d0;
+}
+
+.Finance-planAllocations {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 0.75rem;
+}
+
+.Finance-allocation {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.6rem 0.75rem;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 6px;
+}
+
+.Finance-warning {
+  padding: 0.75rem 1rem;
+  background: rgba(255,107,107,0.12);
+  border: 1px solid rgba(255,107,107,0.35);
+  border-radius: 8px;
+  color: #ff6b6b;
+  font-weight: 600;
+}
+
+@media (max-width: 480px) {
+  .Finance-root { padding: 1rem; }
+  .Finance-addCategory { flex-direction: column; }
+}

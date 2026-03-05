@@ -1,0 +1,9 @@
+.ExecutionProfile { display:block; padding:12px; border-radius:12px; }
+.Profile-header{ display:flex; justify-content:space-between; align-items:center; }
+.Impact-score{ font-size:22px; font-weight:800; color:var(--accent-2); }
+.Profile-grid{ display:grid; grid-template-columns: repeat(4,1fr); gap:8px; margin-top:12px }
+.Profile-item{ background: rgba(255,255,255,0.02); padding:8px; border-radius:8px; text-align:center }
+.Profile-item .label{ font-size:12px; color:var(--muted) }
+.Profile-item .value{ font-size:16px; font-weight:700 }
+.Profile-details{ margin-top:10px; color:var(--muted); font-size:13px }
+@media (max-width:700px){ .Profile-grid{ grid-template-columns:repeat(2,1fr) } }

@@ -1,0 +1,629 @@
+.ProductivityDashboard {
+  width: 100%;
+  padding: 1.25rem;
+  background: linear-gradient(180deg, #0f1724, #0b0f1a);
+  border-radius: 12px;
+  color: #e6eef8;
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+.AppUI-layout .ProductivityDashboard {
+  padding: 1.5rem;
+}
+
+.AppUI-layout .ProductivityDashboard .MetricCard {
+  padding: 1.1rem;
+}
+
+.AppUI-layout .ProductivityDashboard .MetricCard-scoreCircle {
+  width: 68px;
+  height: 68px;
+}
+
+.AppUI-layout .ProductivityDashboard .MetricCard-percentage {
+  font-size: 1.5rem;
+}
+
+.AppUI-layout .ProductivityDashboard .MetricCard-value {
+  font-size: 1.5rem;
+}
+
+.AppUI-layout .ProductivityDashboard .ProductivityDashboard-container {
+  gap: 1rem;
+}
+
+.AppUI-layout .ProductivityDashboard .ProductivityDashboard-charts {
+  padding: 1.2rem;
+}
+
+.AppUI-layout .ProductivityDashboard .ProductivityDashboard-title {
+  margin-bottom: 1.2rem;
+}
+
+.AppUI-layout .ProductivityDashboard .MetricCard-description {
+  font-size: 0.8rem;
+}
+
+.AppUI-layout .ProductivityDashboard .ProductivityDashboard-scoreGuide {
+  font-size: 0.72rem;
+}
+
+.AppUI-layout .ProductivityDashboard .ProductivityDashboard-chartsHeader {
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+}
+
+.AppUI-layout .ProductivityDashboard .ProductivityDashboard-chartsGrid {
+  min-height: 220px;
+}
+
+.AppUI-layout .ProductivityDashboard .SimpleChart--bar .SimpleChart-bars {
+  height: 140px;
+}
+
+.AppUI-layout .ProductivityDashboard .SimpleChart--line .SimpleChart-svg {
+  max-width: 280px;
+}
+
+@media (max-width: 1200px) {
+  .AppUI-layout .ProductivityDashboard {
+    padding: 1.25rem;
+  }
+}
+
+.ProductivityDashboard-title {
+  font-size: clamp(1.2rem, 4vw, 1.5rem);
+  color: #00d1ff;
+  margin: 0 0 1.2rem 0;
+  text-align: center;
+  text-shadow: 0 0 20px rgba(0,209,255,0.3);
+}
+
+.ProductivityDashboard-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+@media (max-width: 768px) {
+  .ProductivityDashboard-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+.MetricCard {
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border: 1px solid rgba(0,209,255,0.1);
+  border-radius: 12px;
+  padding: 1rem;
+  transition: all 0.3s ease;
+}
+
+.MetricCard:hover {
+  transform: translateY(-4px);
+  border-color: rgba(0,209,255,0.3);
+  box-shadow: 0 8px 24px rgba(0,209,255,0.1);
+}
+
+.MetricCard--primary {
+  grid-column: span 2;
+  background: linear-gradient(135deg, rgba(0,209,255,0.08), rgba(124,58,237,0.06));
+  border-color: rgba(0,209,255,0.2);
+}
+
+@media (max-width: 768px) {
+  .MetricCard--primary {
+    grid-column: span 1;
+  }
+}
+
+.MetricCard--secondary {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: linear-gradient(135deg, rgba(107,207,127,0.08), rgba(255,217,61,0.06));
+  border-color: rgba(107,207,127,0.2);
+}
+
+.MetricCard--tertiary {
+  background: linear-gradient(135deg, rgba(255,107,107,0.08), rgba(255,154,118,0.06));
+  border-color: rgba(255,107,107,0.2);
+}
+
+.MetricCard--activity {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: linear-gradient(135deg, rgba(255,217,61,0.08), rgba(0,209,255,0.06));
+  border-color: rgba(255,217,61,0.2);
+}
+
+.MetricCard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.MetricCard-header h3 {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #a8b8d0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.MetricCard-percentage {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #00d1ff;
+}
+
+.MetricCard-scoreCircle {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: 3px solid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,209,255,0.1);
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+@media (max-width: 480px) {
+  .MetricCard-scoreCircle {
+    width: 60px;
+    height: 60px;
+  }
+}
+
+.MetricCard-scoreValue {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #00d1ff;
+}
+
+.MetricCard-icon {
+  font-size: 3rem;
+  flex-shrink: 0;
+}
+
+.MetricCard-content {
+  flex: 1;
+  min-width: 150px;
+}
+
+.MetricCard-value {
+  margin: 0.5rem 0;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #00d1ff;
+}
+
+.MetricCard-description {
+  margin: 0.5rem 0 0 0;
+  font-size: 0.8rem;
+  color: #a8b8d0;
+  font-weight: 500;
+}
+
+.ProductivityDashboard-scoreGuide {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  font-size: 0.8rem;
+  color: #868ca6;
+  overflow-x: auto;
+}
+
+.ProgressBar {
+  width: 100%;
+  height: 8px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+
+.ProgressBar-fill {
+  height: 100%;
+  border-radius: 6px;
+  transition: width 0.4s ease, background-color 0.3s ease;
+  box-shadow: 0 0 10px rgba(0,209,255,0.3);
+}
+
+/* Charts Section */
+.ProductivityDashboard-charts {
+  background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005));
+  border: 1px solid rgba(0,209,255,0.1);
+  border-radius: 12px;
+  padding: 1rem;
+}
+
+.ProductivityDashboard-chartsHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.ProductivityDashboard-chartsHeader h3 {
+  margin: 0;
+  color: #00d1ff;
+  font-size: 1.1rem;
+}
+
+.ProductivityDashboard-chartControls {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.ProductivityDashboard-chartControls label {
+  white-space: nowrap;
+}
+
+.ProductivityDashboard-chartControls label {
+  color: #a8b8d0;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.ProductivityDashboard-chartSelect {
+  background: rgba(255,255,255,0.04);
+  color: #e6eef8;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.ProductivityDashboard-chartSelect option {
+  background: #0b0f1a;
+  color: #e6eef8;
+}
+
+.ProductivityDashboard-chartSelect:hover {
+  border-color: rgba(0,209,255,0.3);
+  background: rgba(0,209,255,0.08);
+}
+
+.ProductivityDashboard-chartsGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+  min-height: 220px;
+}
+
+@media (max-width: 768px) {
+  .ProductivityDashboard-chartsGrid {
+    min-height: 250px;
+  }
+}
+
+.SimpleChart {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.SimpleChart-title {
+  color: #a8b8d0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+}
+
+.SimpleChart--bar .SimpleChart-bars {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-around;
+  gap: 1rem;
+  height: 140px;
+  margin-bottom: 1rem;
+}
+
+.SimpleChart-barContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  min-width: 60px;
+}
+
+.SimpleChart-bar {
+  width: 100%;
+  min-height: 20px;
+  border-radius: 6px 6px 0 0;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 10px rgba(0,209,255,0.2);
+  cursor: pointer;
+}
+
+.SimpleChart-bar:hover {
+  filter: brightness(1.2);
+  box-shadow: 0 0 15px rgba(0,209,255,0.4);
+}
+
+.SimpleChart-value {
+  margin-top: 0.5rem;
+  color: #a8b8d0;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.SimpleChart--pie .SimpleChart-svg {
+  width: 100%;
+  max-width: 280px;
+  height: auto;
+  margin: 0 auto 1rem;
+  display: block;
+}
+
+.SimpleChart--donut {
+  position: relative;
+}
+
+.SimpleChart-donutHole {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: #0b0f1a;
+  top: 55%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.4);
+}
+
+.SimpleChart--stacked .SimpleChart-stackedBar {
+  display: flex;
+  height: 26px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.SimpleChart-stackedSegment {
+  height: 100%;
+}
+
+.SimpleChart--line .SimpleChart-svg {
+  width: 100%;
+  max-width: 340px;
+  height: auto;
+  margin: 0 auto;
+  display: block;
+}
+
+.SimpleChart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
+}
+
+.SimpleChart-legendItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #a8b8d0;
+  font-size: 0.9rem;
+}
+
+.SimpleChart-dot {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+}
+
+.ProductivityDashboard-flowStats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 1rem;
+}
+
+.FlowStage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.FlowStage:hover {
+  background: rgba(255,255,255,0.04);
+  transform: translateY(-2px);
+}
+
+.FlowStage-count {
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+}
+
+.FlowStage-label {
+  font-size: 0.85rem;
+  color: #a8b8d0;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+@media (max-width: 480px) {
+  .ProductivityDashboard {
+    padding: 1rem;
+  }
+
+  .ProductivityDashboard-title {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .ProductivityDashboard-container {
+    gap: 1rem;
+  }
+
+  .MetricCard {
+    padding: 1rem;
+  }
+
+  .ProductivityDashboard-charts {
+    padding: 1rem;
+  }
+
+  .SimpleChart {
+    padding: 1rem;
+  }
+
+  .SimpleChart--bar .SimpleChart-bars {
+    height: 150px;
+    gap: 0.5rem;
+  }
+
+  .ProductivityDashboard-flowStats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .ProductivityDashboard-chartsHeader {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .ProductivityDashboard-chartControls {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .ProductivityDashboard-chartSelect {
+    width: 100%;
+  }
+
+  .SimpleChart {
+    padding: 1rem;
+  }
+
+  .SimpleChart--bar .SimpleChart-bars {
+    height: 140px;
+  }
+}
+
+@media (max-width: 360px) {
+  .ProductivityDashboard-container {
+    grid-template-columns: 1fr;
+  }
+
+  .MetricCard {
+    padding: 0.9rem;
+  }
+
+  .MetricCard-scoreCircle {
+    width: 54px;
+    height: 54px;
+  }
+}
+
+.Stat-divider {
+  width: 1px;
+  height: 40px;
+  background: rgba(255,255,255,0.1);
+}
+
+.Stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.Stat-number {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #00d1ff;
+}
+
+.Stat-label {
+  font-size: 0.85rem;
+  color: #a8b8d0;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.Stat-divider {
+  width: 1px;
+  height: 40px;
+  background-color: #e5e7eb;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .ProductivityDashboard-container {
+    grid-template-columns: 1fr;
+  }
+
+  .MetricCard--primary {
+    grid-column: 1;
+  }
+
+  .MetricCard-percentage {
+    font-size: 20px;
+  }
+
+  .Stat-number {
+    font-size: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .ProductivityDashboard {
+    padding: 16px;
+    margin-bottom: 16px;
+    border-radius: 8px;
+  }
+
+  .ProductivityDashboard-container {
+    gap: 12px;
+  }
+
+  .MetricCard {
+    padding: 16px;
+    border-radius: 8px;
+  }
+
+  .MetricCard-icon {
+    font-size: 28px;
+  }
+
+  .MetricCard-value {
+    font-size: 24px;
+  }
+
+  .MetricCard-header h3 {
+    font-size: 12px;
+  }
+}

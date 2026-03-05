@@ -1,0 +1,605 @@
+.DocumentSuite-root {
+  padding: 1.5rem;
+  background: linear-gradient(180deg, #0f1724, #0b0f1a);
+  border-radius: 12px;
+  color: #e6eef8;
+  height: 100%;
+  overflow: hidden;
+}
+
+.DocumentSuite-layout {
+  display: grid;
+  grid-template-columns: 250px 1fr;
+  gap: 1rem;
+  height: 100%;
+}
+
+/* Sidebar */
+.DocumentSuite-sidebar {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 10px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.DocumentSuite-sidebarHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  justify-content: space-between;
+}
+
+.DocumentSuite-sidebarHeader h3 {
+  margin: 0;
+  color: #00d1ff;
+  font-size: 1.05rem;
+}
+
+.DocumentSuite-addBtn {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1px solid rgba(0,209,255,0.3);
+  background: rgba(0,209,255,0.18);
+  color: #00d1ff;
+  font-size: 1.2rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.DocumentSuite-addBtn:hover {
+  background: rgba(0,209,255,0.28);
+}
+
+.DocumentSuite-newDocForm {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: rgba(0,209,255,0.08);
+  border: 1px solid rgba(0,209,255,0.2);
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.DocumentSuite-newDocForm input {
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  border: 1px solid rgba(0,209,255,0.3);
+  background: rgba(0,209,255,0.08);
+  color: #e6eef8;
+  font-size: 0.9rem;
+}
+
+.DocumentSuite-formButtons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.btn-small {
+  flex: 1;
+  padding: 0.4rem;
+  border-radius: 6px;
+  border: 1px solid rgba(0,209,255,0.3);
+  background: rgba(0,209,255,0.18);
+  color: #e6eef8;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-small:hover {
+  background: rgba(0,209,255,0.28);
+}
+
+.btn-small.secondary {
+  background: rgba(255,255,255,0.04);
+  border-color: rgba(255,255,255,0.1);
+}
+
+.btn-small.secondary:hover {
+  background: rgba(255,255,255,0.08);
+}
+
+.DocumentSuite-docsList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.DocumentSuite-docItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.04);
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.DocumentSuite-docItem.active {
+  background: rgba(0,209,255,0.08);
+  border-color: rgba(0,209,255,0.3);
+}
+
+.DocumentSuite-docButton {
+  flex: 1;
+  background: transparent;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  color: #e6eef8;
+  padding: 0;
+}
+
+.DocumentSuite-docName {
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-bottom: 0.2rem;
+}
+
+.DocumentSuite-docDate {
+  font-size: 0.75rem;
+  color: #a8b8d0;
+}
+
+.DocumentSuite-docActions {
+  display: flex;
+  gap: 0.25rem;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.DocumentSuite-docItem:hover .DocumentSuite-docActions {
+  opacity: 1;
+}
+
+.icon-btn-small {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  border: none;
+  background: rgba(255,255,255,0.05);
+  color: #a8b8d0;
+  cursor: pointer;
+  font-size: 0.75rem;
+  transition: all 0.2s;
+}
+
+.icon-btn-small:hover {
+  background: rgba(0,209,255,0.2);
+  color: #00d1ff;
+}
+
+.icon-btn-small.delete:hover {
+  background: rgba(239,68,68,0.2);
+  color: #ff6b6b;
+}
+
+.DocumentSuite-renameForm {
+  flex: 1;
+  display: flex;
+  gap: 0.3rem;
+}
+
+.DocumentSuite-renameForm input {
+  flex: 1;
+  padding: 0.3rem;
+  border-radius: 4px;
+  border: 1px solid rgba(0,209,255,0.3);
+  background: rgba(0,209,255,0.08);
+  color: #e6eef8;
+  font-size: 0.85rem;
+}
+
+.DocumentSuite-formButtons-tiny {
+  display: flex;
+  gap: 0.2rem;
+}
+
+.DocumentSuite-formButtons-tiny button {
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border-radius: 3px;
+  border: none;
+  background: rgba(0,209,255,0.18);
+  color: #00d1ff;
+  font-size: 0.7rem;
+  cursor: pointer;
+}
+
+/* Editor */
+.DocumentSuite-editor {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.DocumentSuite-editorHeader {
+  padding: 1rem;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.DocumentSuite-editorHeader h2 {
+  margin: 0;
+  color: #00d1ff;
+  font-size: 1.3rem;
+}
+
+.DocumentSuite-info {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.85rem;
+  color: #a8b8d0;
+}
+
+.DocumentSuite-createdDate {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.DocumentSuite-autoSave {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: #4ade80;
+  font-weight: 600;
+}
+
+/* Tabs de Hojas */
+.DocumentSuite-sheetsTabs {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: rgba(0,209,255,0.02);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  overflow-x: auto;
+  align-items: center;
+}
+
+.DocumentSuite-sheetTab {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 0.75rem;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px 8px 0 0;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+  min-width: fit-content;
+}
+
+.DocumentSuite-sheetTab.active {
+  background: rgba(0,209,255,0.08);
+  border-color: rgba(0,209,255,0.3);
+  border-bottom-color: #00d1ff;
+}
+
+.DocumentSuite-sheetButton {
+  background: transparent;
+  border: none;
+  color: #a8b8d0;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  padding: 0;
+}
+
+.DocumentSuite-sheetTab.active .DocumentSuite-sheetButton {
+  color: #00d1ff;
+  font-weight: 600;
+}
+
+.DocumentSuite-sheetActions {
+  display: flex;
+  gap: 0.25rem;
+  opacity: 0;
+  transition: opacity 0.2s;
+  margin-left: 0.25rem;
+}
+
+.DocumentSuite-sheetTab.active .DocumentSuite-sheetActions {
+  opacity: 1;
+}
+
+.sheet-icon-btn {
+  width: 20px;
+  height: 20px;
+  border-radius: 3px;
+  border: none;
+  background: rgba(0,209,255,0.1);
+  color: #00d1ff;
+  cursor: pointer;
+  font-size: 0.7rem;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sheet-icon-btn:hover {
+  background: rgba(0,209,255,0.2);
+}
+
+.sheet-icon-btn.delete:hover {
+  background: rgba(239,68,68,0.2);
+  color: #ff6b6b;
+}
+
+.DocumentSuite-renameSheetInput {
+  padding: 0.3rem 0.5rem;
+  border-radius: 4px;
+  border: 1px solid rgba(0,209,255,0.3);
+  background: rgba(0,209,255,0.08);
+  color: #e6eef8;
+  font-size: 0.9rem;
+  font-weight: 600;
+  min-width: 100px;
+}
+
+.DocumentSuite-addSheetBtn {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px 8px 0 0;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(0,209,255,0.1);
+  color: #00d1ff;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.DocumentSuite-addSheetBtn:hover {
+  background: rgba(0,209,255,0.2);
+  border-color: rgba(0,209,255,0.3);
+}
+
+.DocumentSuite-newSheetForm {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: rgba(0,209,255,0.04);
+  border-bottom: 1px solid rgba(0,209,255,0.2);
+  align-items: center;
+}
+
+.DocumentSuite-newSheetForm input {
+  flex: 1;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  border: 1px solid rgba(0,209,255,0.3);
+  background: rgba(0,209,255,0.08);
+  color: #e6eef8;
+  font-size: 0.9rem;
+}
+
+.DocumentSuite-newSheetForm .btn-small {
+  min-width: 70px;
+}
+
+/* Toolbar */
+.DocumentSuite-toolbar {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: rgba(0,209,255,0.04);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  overflow-x: auto;
+  flex-wrap: wrap;
+}
+
+.DocumentSuite-toolGroup {
+  display: flex;
+  gap: 0.3rem;
+  padding-right: 0.75rem;
+  border-right: 1px solid rgba(255,255,255,0.1);
+}
+
+.DocumentSuite-toolGroup:last-child {
+  border-right: none;
+}
+
+.tool-btn {
+  min-width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.03);
+  color: #e6eef8;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tool-btn:hover {
+  background: rgba(0,209,255,0.1);
+  border-color: rgba(0,209,255,0.3);
+}
+
+.tool-btn.export {
+  background: rgba(76,175,80,0.1);
+  border-color: rgba(76,175,80,0.3);
+  color: #4ade80;
+}
+
+.tool-btn.export:hover {
+  background: rgba(76,175,80,0.2);
+  border-color: rgba(76,175,80,0.5);
+}
+
+.tool-select {
+  padding: 0.5rem;
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.03);
+  color: #e6eef8;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+/* Editor Area */
+.DocumentSuite-editorArea {
+  flex: 1;
+  padding: 2rem;
+  overflow-y: auto;
+  outline: none;
+  word-wrap: break-word;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #e6eef8;
+}
+
+.DocumentSuite-editorArea h1 {
+  font-size: 2rem;
+  color: #00d1ff;
+  margin: 1.5rem 0 0.5rem 0;
+  font-weight: 700;
+}
+
+.DocumentSuite-editorArea h2 {
+  font-size: 1.6rem;
+  color: #60a5fa;
+  margin: 1.3rem 0 0.4rem 0;
+  font-weight: 700;
+}
+
+.DocumentSuite-editorArea h3 {
+  font-size: 1.3rem;
+  color: #a8b8d0;
+  margin: 1.1rem 0 0.3rem 0;
+  font-weight: 600;
+}
+
+.DocumentSuite-editorArea h4,
+.DocumentSuite-editorArea h5,
+.DocumentSuite-editorArea h6 {
+  font-size: 1.05rem;
+  margin: 0.8rem 0 0.2rem 0;
+  font-weight: 600;
+}
+
+.DocumentSuite-editorArea p {
+  margin: 0.5rem 0;
+}
+
+.DocumentSuite-editorArea ul,
+.DocumentSuite-editorArea ol {
+  margin: 0.5rem 0 0.5rem 1.5rem;
+  color: #e6eef8;
+}
+
+.DocumentSuite-editorArea li {
+  margin: 0.25rem 0;
+}
+
+.DocumentSuite-editorArea blockquote {
+  margin: 1rem 0;
+  padding: 0.75rem 1rem;
+  border-left: 4px solid #00d1ff;
+  background: rgba(0,209,255,0.08);
+  color: #a8b8d0;
+  font-style: italic;
+}
+
+.DocumentSuite-editorArea strong {
+  color: #00d1ff;
+  font-weight: 700;
+}
+
+.DocumentSuite-editorArea em {
+  color: #60a5fa;
+  font-style: italic;
+}
+
+.DocumentSuite-editorArea u {
+  text-decoration: underline;
+  text-decoration-color: #4ade80;
+}
+
+.DocumentSuite-editorArea s {
+  text-decoration: line-through;
+  color: #a8b8d0;
+}
+
+/* Scrollbar personalizada */
+.DocumentSuite-editorArea::-webkit-scrollbar {
+  width: 8px;
+}
+
+.DocumentSuite-editorArea::-webkit-scrollbar-track {
+  background: rgba(255,255,255,0.02);
+}
+
+.DocumentSuite-editorArea::-webkit-scrollbar-thumb {
+  background: rgba(0,209,255,0.2);
+  border-radius: 4px;
+}
+
+.DocumentSuite-editorArea::-webkit-scrollbar-thumb:hover {
+  background: rgba(0,209,255,0.3);
+}
+
+@media (max-width: 900px) {
+  .DocumentSuite-layout {
+    grid-template-columns: 200px 1fr;
+  }
+
+  .DocumentSuite-toolbar {
+    gap: 0.3rem;
+  }
+
+  .DocumentSuite-toolGroup {
+    padding-right: 0.5rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .DocumentSuite-root {
+    padding: 1rem;
+  }
+
+  .DocumentSuite-layout {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+
+  .DocumentSuite-sidebar {
+    display: none;
+  }
+
+  .DocumentSuite-toolbar {
+    flex-wrap: wrap;
+    gap: 0.25rem;
+  }
+
+  .DocumentSuite-editorArea {
+    padding: 1rem;
+    font-size: 0.95rem;
+  }
+}

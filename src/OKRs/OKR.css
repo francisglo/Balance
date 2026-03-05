@@ -1,0 +1,10 @@
+.OKRList { background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.02)); padding:12px; border-radius:10px; margin:12px 0; box-shadow:0 10px 30px rgba(2,6,23,0.5); border:1px solid rgba(255,255,255,0.03); }
+.OKRForm { display:flex; gap:8px; margin-bottom:12px; }
+.OKRForm input { flex:1; padding:8px 10px; border-radius:8px; border:1px solid rgba(255,255,255,0.04); background:transparent; color:var(--muted); }
+.OKRForm button { background: linear-gradient(90deg,var(--accent),var(--accent-2)); color:#021124; border:none; padding:8px 12px; border-radius:8px; cursor:pointer; }
+.OKRList-items { display:flex; flex-direction:column; gap:8px; }
+.OKRItem { padding:10px; border-radius:8px; background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.015)); }
+.OKRItem-title { font-weight:700; color:#e6eef8 }
+.OKRKrs { margin-top:6px; display:flex; flex-direction:column; gap:6px; }
+.OKRKr { display:flex; justify-content:space-between; align-items:center; background: transparent; padding:8px; border-radius:8px; border:1px solid rgba(255,255,255,0.03); color:var(--muted); }
+.OKR-empty { color:var(--muted); padding:8px; }

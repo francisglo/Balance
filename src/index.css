@@ -1,13 +1,57 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+:root{
+  --bg:#0b0f1a;
+  --surface:#0f1724;
+  --muted:#9aa4b2;
+  --accent:#00d1ff;
+  --accent-2:#7c3aed;
+  --card:#0b1220;
+  --glass: rgba(255,255,255,0.03);
+
+  /* Neuro-Execution Canvas tokens */
+  --neuro-accent: #00d1ff;
+  --neuro-accent-2: #7c3aed;
+  --neuro-risk: #ff6b6b;
+  --mono-numbers: 'Roboto Mono', 'Courier New', monospace;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+body {
+  margin:0;
+  padding:0;
+  background: linear-gradient(180deg,var(--bg) 0%, #071024 100%);
+  color: #e6eef8;
+  font-family: Inter, 'Montserrat', Arial, Helvetica, sans-serif;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
 }
+
+#root {
+  margin: 20px;
+  position:relative;
+  min-height:100vh;
+  max-width:1200px;
+}
+
+/* Global headings */
+h1,h2,h3,h4{ color: #e6eef8; margin:0 }
+
+/* Buttons */
+.btn {
+  background: linear-gradient(90deg,var(--accent) 0%, var(--accent-2) 100%);
+  color:#021124;
+  border:none;
+  padding:8px 12px;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:600;
+}
+
+/* Cards */
+.card{ background: linear-gradient(180deg,var(--card), rgba(255,255,255,0.02)); padding:12px; border-radius:12px; box-shadow: 0 8px 30px rgba(2,6,23,0.6); }
+
+/* Links */
+a{ color:var(--accent); text-decoration:none }
+
+/* Utility */
+.muted{ color:var(--muted); }
+
+

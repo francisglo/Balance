@@ -1,0 +1,7 @@
+.Alerts{ padding:12px }
+.Alerts ul{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:8px }
+.alert-item{ display:flex; justify-content:space-between; align-items:center; padding:8px; border-radius:8px; background: rgba(255,255,255,0.02); }
+.alert-critical{ border-left:4px solid #ef4444 }
+.alert-warning{ border-left:4px solid #f59e0b }
+.alert-title{ font-weight:700 }
+.alert-type{ font-size:12px; color:var(--muted) }

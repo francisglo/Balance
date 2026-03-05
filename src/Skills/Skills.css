@@ -1,0 +1,177 @@
+.SkillsPortfolio {
+  width: 100%;
+  padding: 2rem;
+  background: linear-gradient(180deg, #0f1724, #0b0f1a);
+  border-radius: 12px;
+  color: #e6eef8;
+}
+
+.SkillsPortfolio-title {
+  font-size: 1.8rem;
+  color: #00d1ff;
+  margin: 0 0 2rem 0;
+  text-align: center;
+  text-shadow: 0 0 20px rgba(0,209,255,0.3);
+}
+
+.SkillsPortfolio-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: rgba(255,255,255,0.01);
+  border: 1px solid rgba(0,209,255,0.1);
+  border-radius: 12px;
+}
+
+.SkillStat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  background: rgba(255,255,255,0.02);
+  border-radius: 8px;
+  text-align: center;
+}
+
+.SkillStat-label {
+  font-size: 0.85rem;
+  color: #a8b8d0;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.SkillStat-value {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #00d1ff;
+}
+
+.SkillsPortfolio-filters {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.SkillFilter {
+  padding: 0.75rem 1rem;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(0,209,255,0.1);
+  color: #a8b8d0;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.SkillFilter:hover {
+  border-color: rgba(0,209,255,0.3);
+  background: rgba(0,209,255,0.1);
+}
+
+.SkillFilter.active {
+  background: linear-gradient(135deg, rgba(0,209,255,0.2), rgba(124,58,237,0.1));
+  border-color: rgba(0,209,255,0.5);
+  color: #00d1ff;
+  box-shadow: 0 0 15px rgba(0,209,255,0.2);
+}
+
+.SkillsPortfolio-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .SkillsPortfolio-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  }
+}
+
+.SkillBadge {
+  background: linear-gradient(135deg, rgba(0,209,255,0.08), rgba(124,58,237,0.06));
+  border: 1px solid rgba(0,209,255,0.2);
+  border-radius: 12px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.SkillBadge:hover {
+  transform: translateY(-4px);
+  border-color: rgba(0,209,255,0.5);
+  box-shadow: 0 8px 24px rgba(0,209,255,0.1);
+}
+
+.SkillBadge-name {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #e6eef8;
+  word-break: break-word;
+}
+
+.SkillBadge-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.SkillBadge-level {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: white;
+}
+
+.SkillBadge-xp {
+  font-size: 0.85rem;
+  color: #a8b8d0;
+  font-weight: 600;
+}
+
+.SkillBadge-tasks {
+  font-size: 0.85rem;
+  color: #868ca6;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  padding-top: 0.75rem;
+}
+
+.SkillsPortfolio-empty {
+  text-align: center;
+  padding: 3rem 2rem;
+  color: #a8b8d0;
+}
+
+.SkillsPortfolio-empty p {
+  margin: 0;
+  font-size: 1rem;
+}
+
+@media (max-width: 480px) {
+  .SkillsPortfolio {
+    padding: 1rem;
+  }
+
+  .SkillsPortfolio-title {
+    font-size: 1.5rem;
+  }
+
+  .SkillsPortfolio-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .SkillsPortfolio-grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  }
+}

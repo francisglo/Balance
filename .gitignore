@@ -23,4 +23,9 @@ yarn-debug.log*
 yarn-error.log*
 
 # vscode
+
+# local backend secrets/data
+/server/.env
+/server/backups/
+/server/dex-data.json
 .vscode

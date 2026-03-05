@@ -1,0 +1,496 @@
+.Coworking-root {
+  padding: 1.5rem;
+  background: linear-gradient(180deg, #0f1724, #0b0f1a);
+  border-radius: 12px;
+  color: #e6eef8;
+}
+
+.Coworking-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.Coworking-header h2 {
+  margin: 0;
+  color: #00d1ff;
+}
+
+.Coworking-header span {
+  font-size: 0.9rem;
+  color: #a8b8d0;
+}
+
+.Coworking-layout {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+/* User Panel */
+.Coworking-userPanel,
+.Coworking-timerPanel,
+.Coworking-sessionsPanel,
+.Coworking-colleaguesPanel {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 10px;
+  padding: 1.25rem;
+}
+
+.Coworking-userPanel h3,
+.Coworking-timerPanel h3,
+.Coworking-sessionsPanel h3,
+.Coworking-colleaguesPanel h3 {
+  margin: 0 0 1rem 0;
+  color: #00d1ff;
+  font-size: 1.1rem;
+}
+
+.Coworking-userCard {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  background: rgba(0,209,255,0.08);
+  border: 1px solid rgba(0,209,255,0.2);
+  border-radius: 10px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.Coworking-avatar-lg {
+  font-size: 2.5rem;
+  width: 60px;
+  height: 60px;
+  display: grid;
+  place-items: center;
+}
+
+.Coworking-userInfo {
+  flex: 1;
+}
+
+.Coworking-userName {
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.Coworking-userStatus {
+  font-size: 0.85rem;
+  color: #a8b8d0;
+  margin-top: 0.25rem;
+}
+
+.Coworking-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.Coworking-section label {
+  font-size: 0.85rem;
+  color: #a8b8d0;
+  font-weight: 600;
+}
+
+.Coworking-statusButtons {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.5rem;
+}
+
+.Coworking-statusBtn {
+  padding: 0.6rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.02);
+  color: #e6eef8;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.Coworking-statusBtn:hover {
+  background: rgba(0,209,255,0.1);
+  border-color: rgba(0,209,255,0.2);
+}
+
+.Coworking-statusBtn.active {
+  background: rgba(0,209,255,0.2);
+  border-color: rgba(0,209,255,0.4);
+}
+
+.Coworking-input {
+  padding: 0.6rem 0.75rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.03);
+  color: #e6eef8;
+  font-size: 0.9rem;
+}
+
+.Coworking-input::placeholder {
+  color: #a8b8d0;
+}
+
+/* Timer Panel */
+.Coworking-timerDisplay {
+  background: rgba(0,209,255,0.08);
+  border: 2px solid rgba(0,209,255,0.3);
+  border-radius: 12px;
+  padding: 2rem 1rem;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.Coworking-timerValue {
+  font-size: 3rem;
+  font-weight: 700;
+  color: #00d1ff;
+  letter-spacing: 2px;
+  font-family: 'Courier New', monospace;
+}
+
+.Coworking-timerDuration {
+  font-size: 0.9rem;
+  color: #a8b8d0;
+  margin-top: 0.5rem;
+}
+
+.Coworking-timerButtons {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.Coworking-btn,
+.Coworking-btn-small {
+  border-radius: 8px;
+  border: 1px solid rgba(0,209,255,0.3);
+  background: rgba(0,209,255,0.18);
+  color: #e6eef8;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.Coworking-btn {
+  flex: 1;
+  padding: 0.7rem;
+  font-size: 0.95rem;
+}
+
+.Coworking-btn:hover {
+  background: rgba(0,209,255,0.28);
+  border-color: rgba(0,209,255,0.5);
+}
+
+.Coworking-btn.secondary {
+  background: rgba(255,255,255,0.04);
+  border-color: rgba(255,255,255,0.1);
+}
+
+.Coworking-btn.secondary:hover {
+  background: rgba(255,255,255,0.08);
+}
+
+.Coworking-timerTypes {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.Coworking-timerType {
+  padding: 0.5rem;
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.02);
+  color: #a8b8d0;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.Coworking-timerType:hover {
+  border-color: rgba(0,209,255,0.3);
+  background: rgba(0,209,255,0.1);
+}
+
+.Coworking-timerType.active {
+  background: rgba(0,209,255,0.2);
+  border-color: rgba(0,209,255,0.4);
+  color: #00d1ff;
+  font-weight: 600;
+}
+
+.Coworking-participants {
+  padding: 0.75rem;
+  background: rgba(255,255,255,0.02);
+  border-radius: 8px;
+}
+
+.Coworking-participants strong {
+  display: block;
+  font-size: 0.85rem;
+  color: #a8b8d0;
+  margin-bottom: 0.5rem;
+}
+
+.Coworking-participant {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0;
+  font-size: 0.85rem;
+}
+
+.Coworking-avatar-sm {
+  font-size: 1rem;
+}
+
+/* Sessions Panel */
+.Coworking-sessionsHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  justify-content: space-between;
+}
+
+.Coworking-addBtn {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1px solid rgba(0,209,255,0.3);
+  background: rgba(0,209,255,0.18);
+  color: #00d1ff;
+  font-size: 1.2rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.Coworking-addBtn:hover {
+  background: rgba(0,209,255,0.28);
+}
+
+.Coworking-newSessionForm {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: rgba(0,209,255,0.08);
+  border: 1px solid rgba(0,209,255,0.2);
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.Coworking-newSessionForm input {
+  padding: 0.6rem 0.75rem;
+  border-radius: 6px;
+  border: 1px solid rgba(0,209,255,0.3);
+  background: rgba(0,209,255,0.08);
+  color: #e6eef8;
+  font-size: 0.9rem;
+}
+
+.Coworking-typeSelect {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.Coworking-typeSelect button {
+  flex: 1;
+  padding: 0.5rem;
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.02);
+  color: #a8b8d0;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.Coworking-typeSelect button.active {
+  background: rgba(0,209,255,0.2);
+  border-color: rgba(0,209,255,0.4);
+  color: #00d1ff;
+  font-weight: 600;
+}
+
+.Coworking-formButtons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.Coworking-btn-small {
+  flex: 1;
+  padding: 0.5rem;
+  font-size: 0.85rem;
+}
+
+.Coworking-btn-small.secondary {
+  background: rgba(255,255,255,0.04);
+  border-color: rgba(255,255,255,0.1);
+  color: #a8b8d0;
+}
+
+.Coworking-sessionsList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.Coworking-noSessions {
+  padding: 1rem;
+  text-align: center;
+  color: #a8b8d0;
+  font-size: 0.9rem;
+}
+
+.Coworking-sessionCard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.04);
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.Coworking-sessionCard.joined {
+  background: rgba(0,209,255,0.08);
+  border-color: rgba(0,209,255,0.3);
+}
+
+.Coworking-sessionInfo h4 {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #e6eef8;
+}
+
+.Coworking-sessionMeta {
+  display: flex;
+  gap: 0.75rem;
+  font-size: 0.8rem;
+  color: #a8b8d0;
+  margin-top: 0.25rem;
+}
+
+.Coworking-sessionType {
+  font-size: 1rem;
+}
+
+.Coworking-sessionBtn {
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  border: 1px solid rgba(0,209,255,0.3);
+  background: rgba(0,209,255,0.18);
+  color: #e6eef8;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.Coworking-sessionBtn:hover {
+  background: rgba(0,209,255,0.28);
+}
+
+.Coworking-sessionBtn.active {
+  background: rgba(239,68,68,0.18);
+  border-color: rgba(239,68,68,0.3);
+  color: #ff6b6b;
+}
+
+.Coworking-sessionBtn.active:hover {
+  background: rgba(239,68,68,0.28);
+}
+
+/* Colleagues Panel */
+.Coworking-colleaguesList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.Coworking-colleagueCard {
+  padding: 0.75rem;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.04);
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.Coworking-colleagueCard:hover {
+  background: rgba(0,209,255,0.08);
+  border-color: rgba(0,209,255,0.2);
+}
+
+.Coworking-colleagueHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.Coworking-avatar-md {
+  font-size: 1.5rem;
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.1);
+}
+
+.Coworking-colleagueInfo {
+  flex: 1;
+}
+
+.Coworking-colleagueName {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.Coworking-colleagueStatus {
+  font-size: 0.8rem;
+  margin-top: 0.2rem;
+}
+
+.Coworking-colleagueTask {
+  font-size: 0.8rem;
+  color: #a8b8d0;
+  margin-top: 0.5rem;
+  padding: 0.4rem 0.6rem;
+  background: rgba(255,255,255,0.02);
+  border-radius: 4px;
+}
+
+@media (max-width: 1200px) {
+  .Coworking-layout {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .Coworking-root {
+    padding: 1rem;
+  }
+
+  .Coworking-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .Coworking-timerValue {
+    font-size: 2.5rem;
+  }
+
+  .Coworking-statusButtons {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

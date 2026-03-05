@@ -1,0 +1,79 @@
+.Lab-root {
+  padding: 1.5rem;
+  background: linear-gradient(180deg, #0f1724, #0b0f1a);
+  border-radius: 12px;
+  color: #e6eef8;
+}
+
+.Lab-embedded {
+  padding: 1.25rem;
+}
+
+.AppUI-side .Lab-root {
+  padding: 1rem;
+}
+
+.AppUI-side .Lab-grid {
+  grid-template-columns: 1fr;
+}
+
+.AppUI-side .Lab-card {
+  padding: 0.75rem;
+}
+
+.AppUI-side .Lab-card h3 {
+  font-size: 0.9rem;
+}
+
+.Lab-root h2 {
+  margin: 0 0 1rem 0;
+  color: #00d1ff;
+}
+
+.Lab-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+}
+
+.Lab-card {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 10px;
+  padding: 1rem;
+}
+
+.Lab-card h3 {
+  margin: 0 0 0.75rem 0;
+  font-size: 1rem;
+  color: #a8b8d0;
+}
+
+.Lab-metricRow {
+  display: flex;
+  justify-content: space-between;
+  margin: 0.25rem 0;
+  font-size: 0.9rem;
+}
+
+.Lab-bigValue {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #00d1ff;
+}
+
+.Lab-empty {
+  color: #868ca6;
+  font-size: 0.9rem;
+}
+
+.Lab-range {
+  width: 100%;
+  margin: 0.5rem 0 0.75rem 0;
+}
+
+@media (max-width: 480px) {
+  .Lab-root {
+    padding: 1rem;
+  }
+}

@@ -1,0 +1,119 @@
+.TodoForm {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 15px;
+}
+
+.TodoForm label {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #e6eef8;
+}
+
+.TodoForm textarea {
+  padding: 12px;
+  border: 1px solid rgba(255,255,255,0.03);
+  border-radius: 8px;
+  font-size: 16px;
+  font-family: 'Montserrat', Arial, sans-serif;
+  resize: vertical;
+  min-height: 100px;
+  background: rgba(255,255,255,0.02);
+  color: #e6eef8;
+}
+
+.TodoForm textarea:focus {
+  outline: none;
+  border-color: #00d1ff;
+  background: rgba(255,255,255,0.04);
+}
+
+.TodoForm textarea::placeholder {
+  color: rgba(230,238,248,0.4);
+}
+
+.TodoForm-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 15px;
+}
+
+.TodoForm-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.TodoForm-group label {
+  font-size: 14px;
+  margin-bottom: 8px;
+  color: #e6eef8;
+}
+
+.TodoForm-group select,
+.TodoForm-group input {
+  padding: 10px;
+  border: 1px solid rgba(255,255,255,0.03);
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: 'Montserrat', Arial, sans-serif;
+  background: rgba(255,255,255,0.02);
+  color: #e6eef8;
+}
+
+.TodoForm-group select:focus,
+.TodoForm-group input:focus {
+  outline: none;
+  border-color: #00d1ff;
+  background: rgba(255,255,255,0.04);
+}
+
+.TodoForm-buttonContainer {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 10px;
+}
+
+.TodoForm-button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.TodoForm-button-cancel {
+  background-color: transparent;
+  color: #e6eef8;
+  border: 1px solid rgba(255,255,255,0.2);
+}
+
+.TodoForm-button-cancel:hover {
+  background-color: rgba(255,255,255,0.05);
+}
+
+.TodoForm-button-add {
+  background: linear-gradient(90deg, #00d1ff, #7c3aed);
+  color: #021124;
+  font-weight: 700;
+}
+
+.TodoForm-button-add:hover {
+  background: linear-gradient(90deg, #00e5ff, #8c4afd);
+}
+
+.TodoForm-button-add:disabled {
+  background: rgba(255,255,255,0.1);
+  color: rgba(230,238,248,0.4);
+  cursor: not-allowed;
+}
+
+@media (max-width: 600px) {
+  .TodoForm-row {
+    grid-template-columns: 1fr;
+  }
+}

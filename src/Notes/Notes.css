@@ -1,0 +1,66 @@
+.NoteEditor-root{display:flex; flex-direction:column; gap:0.5rem; padding:2rem; background:linear-gradient(180deg, #0f1724, #0b0f1a); border-radius:12px; color:#e6eef8}
+
+.NoteEditor-header{text-align:center; margin-bottom:1.5rem; padding-bottom:1rem; border-bottom:1px solid rgba(255,255,255,0.1)}
+
+.NoteEditor-header h2{font-size:1.8rem; color:#00d1ff; margin:0 0 0.5rem 0; text-shadow:0 0 20px rgba(0,209,255,0.3)}
+
+.NoteEditor-subtitle{color:#a8b8d0; margin:0; font-size:0.95rem; font-style:italic}
+
+.NoteEditor-formatToolbar{display:flex; flex-wrap:wrap; gap:0.5rem; padding:1rem; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); border-radius:8px; margin-bottom:1rem}
+
+.NoteEditor-formatGroup{display:flex; gap:0.25rem; border-right:1px solid rgba(255,255,255,0.1); padding-right:0.5rem}
+
+.NoteEditor-formatGroup:last-child{border-right:none}
+
+.NoteEditor-formatBtn{padding:0.5rem 0.75rem; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:4px; color:#e6eef8; cursor:pointer; font-size:0.85rem; transition:all 0.2s ease; white-space:nowrap}
+
+.NoteEditor-formatBtn:hover{background:rgba(0,209,255,0.15); border-color:rgba(0,209,255,0.3); color:#00d1ff; box-shadow:0 0 10px rgba(0,209,255,0.2)}
+
+.NoteEditor-formatSelect{padding:0.5rem; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:4px; color:#e6eef8; font-size:0.85rem; cursor:pointer}
+
+.NoteEditor-actionBar{display:flex; align-items:center; justify-content:space-between; gap:1rem; padding:1rem; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); border-radius:8px; flex-wrap:wrap}
+
+.NoteEditor-leftActions{display:flex; align-items:center; gap:0.75rem; flex-wrap:wrap}
+
+.NoteEditor-leftActions label{font-size:0.9rem; color:#a8b8d0}
+
+.NoteEditor-select,.NoteEditor-checkbox input{background:rgba(255,255,255,0.04); color:#e6eef8; border:1px solid rgba(255,255,255,0.1); border-radius:4px; padding:0.4rem; cursor:pointer}
+
+.NoteEditor-checkbox{display:flex; align-items:center; gap:0.5rem; cursor:pointer; user-select:none}
+
+.NoteEditor-checkbox input{padding:0.3rem; width:18px; height:18px; accent-color:#00d1ff; cursor:pointer}
+
+.NoteEditor-editor{min-height:400px; max-height:600px; overflow-y:auto; padding:2rem; background:rgba(255,255,255,0.01); border:2px solid rgba(0,209,255,0.15); border-radius:8px; color:#e6eef8; font-size:1rem; line-height:1.8; outline:none; word-wrap:break-word; transition:border-color 0.2s ease; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif}
+
+.NoteEditor-editor:focus{border-color:rgba(0,209,255,0.4); box-shadow:0 0 15px rgba(0,209,255,0.1)}
+
+.NoteEditor-editor p{margin:0.5rem 0}
+
+.NoteEditor-editor h1,.NoteEditor-editor h2,.NoteEditor-editor h3,.NoteEditor-editor h4,.NoteEditor-editor h5,.NoteEditor-editor h6{color:#00d1ff; margin:1rem 0 0.5rem 0; text-shadow:0 0 10px rgba(0,209,255,0.2)}
+
+.NoteEditor-editor h1{font-size:2rem}
+.NoteEditor-editor h2{font-size:1.75rem}
+.NoteEditor-editor h3{font-size:1.5rem}
+.NoteEditor-editor h4{font-size:1.25rem}
+
+.NoteEditor-editor ul,.NoteEditor-editor ol{margin:0.75rem 0; padding-left:2rem}
+
+.NoteEditor-editor li{margin:0.3rem 0}
+
+.NoteEditor-editor code{background:rgba(0,209,255,0.1); color:#7fffd4; padding:0.2rem 0.5rem; border-radius:3px; font-family:'Courier New', monospace; font-size:0.9rem}
+
+.NoteEditor-editor blockquote{border-left:4px solid #00d1ff; margin:1rem 0; padding:0.75rem 1rem; background:rgba(0,209,255,0.08); color:#a8b8d0; font-style:italic}
+
+.NoteEditor-editor strong{color:#ffd93d; font-weight:700}
+
+.NoteEditor-editor em{color:#7fffd4; font-style:italic}
+
+.NoteEditor-editor u{text-decoration:underline; text-decoration-color:#00d1ff}
+
+.NoteEditor-editor s{text-decoration:line-through; color:#868ca6}
+
+.NoteEditor-blocks{margin-top:12px; display:flex; gap:8px; flex-wrap:wrap}
+.NoteBlock{padding:8px 12px; border-radius:8px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.03)}
+.NoteBlock--task .nb-title{font-weight:600}
+.NoteBlock--okr .nb-title{font-weight:600}
+.NoteBlock--missing{opacity:0.6}

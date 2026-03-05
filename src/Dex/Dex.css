@@ -1,0 +1,552 @@
+.Dex-root {
+  padding: 1.5rem;
+  background: linear-gradient(180deg, #0f1724, #0b0f1a);
+  border-radius: 12px;
+  color: #e6eef8;
+}
+
+.Dex-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.Dex-header h2 {
+  margin: 0;
+  color: #00d1ff;
+}
+
+.Dex-headerBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #ff6b6b;
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 700;
+  margin-left: auto;
+}
+
+.Dex-layout {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 1rem;
+  min-height: 520px;
+}
+
+.Dex-sidebar {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.Dex-sidebarHeader {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.Dex-search {
+  flex: 1;
+}
+
+.Dex-search input {
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.03);
+  color: #e6eef8;
+  font-size: 0.9rem;
+}
+
+.Dex-addBtn {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: rgba(0,209,255,0.18);
+  border: 1px solid rgba(0,209,255,0.3);
+  color: #00d1ff;
+  font-size: 1.2rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.Dex-addBtn:hover {
+  background: rgba(0,209,255,0.28);
+  border-color: rgba(0,209,255,0.5);
+}
+
+.Dex-newContactForm {
+  padding: 0.75rem;
+  border-bottom: 1px solid rgba(0,209,255,0.2);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.Dex-newContactForm input {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  border: 1px solid rgba(0,209,255,0.3);
+  background: rgba(0,209,255,0.08);
+  color: #e6eef8;
+  font-size: 0.9rem;
+}
+
+.Dex-newContactForm input::placeholder {
+  color: #a8b8d0;
+}
+
+.Dex-formButtons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.btn-small {
+  flex: 1;
+  padding: 0.4rem;
+  border-radius: 6px;
+  border: 1px solid rgba(0,209,255,0.3);
+  background: rgba(0,209,255,0.18);
+  color: #e6eef8;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-small:hover {
+  background: rgba(0,209,255,0.28);
+}
+
+.btn-small.secondary {
+  background: rgba(255,255,255,0.04);
+  border-color: rgba(255,255,255,0.1);
+}
+
+.btn-small.secondary:hover {
+  background: rgba(255,255,255,0.08);
+}
+
+.Dex-contacts {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  overflow-y: auto;
+}
+
+.Dex-emptyContacts {
+  padding: 1rem;
+  text-align: center;
+  color: #a8b8d0;
+  font-size: 0.9rem;
+}
+
+.Dex-contactItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.04);
+  border-radius: 10px;
+  padding: 0.5rem;
+  transition: all 0.2s;
+}
+
+.Dex-contactItem.active {
+  border-color: rgba(0,209,255,0.4);
+  background: rgba(0,209,255,0.08);
+}
+
+.Dex-contactButton {
+  flex: 1;
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  background: transparent;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  color: #e6eef8;
+  padding: 0;
+}
+
+.Dex-contactActions {
+  display: flex;
+  gap: 0.3rem;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.Dex-contactItem:hover .Dex-contactActions {
+  opacity: 1;
+}
+
+.icon-btn {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  border: none;
+  background: rgba(255,255,255,0.05);
+  color: #a8b8d0;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: all 0.2s;
+}
+
+.icon-btn:hover {
+  background: rgba(100,200,255,0.2);
+  color: #00d1ff;
+}
+
+.icon-btn.delete:hover {
+  background: rgba(239,68,68,0.2);
+  color: #ff6b6b;
+}
+
+.Dex-editForm {
+  flex: 1;
+  display: flex;
+  gap: 0.4rem;
+}
+
+.Dex-editForm input {
+  flex: 1;
+  padding: 0.4rem 0.6rem;
+  border-radius: 6px;
+  border: 1px solid rgba(0,209,255,0.3);
+  background: rgba(0,209,255,0.08);
+  color: #e6eef8;
+  font-size: 0.85rem;
+}
+
+.btn-tiny {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  border: none;
+  background: rgba(0,209,255,0.18);
+  color: #00d1ff;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 0.7rem;
+  transition: all 0.2s;
+}
+
+.btn-tiny:hover {
+  background: rgba(0,209,255,0.28);
+}
+
+.Dex-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(0,209,255,0.18);
+  display: grid;
+  place-items: center;
+  color: #00d1ff;
+  font-weight: 700;
+  font-size: 0.9rem;
+  position: relative;
+}
+
+.Dex-statusDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  border: 2px solid #0f1724;
+}
+
+.Dex-contactName {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.Dex-contactStatus {
+  font-size: 0.8rem;
+  color: #a8b8d0;
+}
+
+.Dex-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #ff6b6b;
+  color: white;
+  font-size: 0.7rem;
+  font-weight: 700;
+  margin-left: auto;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.Dex-chat {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+}
+
+.Dex-chatHeader {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.Dex-headerInfo {
+  flex: 1;
+}
+
+.Dex-headerStatus {
+  font-size: 0.8rem;
+  color: #a8b8d0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.Dex-statusSelect {
+  background: rgba(0,209,255,0.08);
+  border: 1px solid rgba(0,209,255,0.2);
+  border-radius: 4px;
+  color: #00d1ff;
+  font-size: 0.75rem;
+  padding: 0.2rem 0.4rem;
+  cursor: pointer;
+}
+
+.Dex-searchToggle {
+  position: absolute;
+  top: 13rem;
+  right: 1.5rem;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid rgba(0,209,255,0.2);
+  background: rgba(0,209,255,0.08);
+  color: #00d1ff;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.2s;
+  z-index: 10;
+}
+
+.Dex-searchToggle:hover {
+  background: rgba(0,209,255,0.18);
+}
+
+.Dex-searchBar {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid rgba(0,209,255,0.2);
+  background: rgba(0,209,255,0.04);
+}
+
+.Dex-searchBar input {
+  flex: 1;
+  padding: 0.6rem 0.75rem;
+  border-radius: 8px;
+  border: 1px solid rgba(0,209,255,0.3);
+  background: rgba(0,209,255,0.08);
+  color: #e6eef8;
+  font-size: 0.9rem;
+}
+
+.Dex-searchHint {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.8rem;
+  color: #a8b8d0;
+}
+
+.Dex-messages {
+  flex: 1;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  overflow-y: auto;
+}
+
+.Dex-noMessages {
+  padding: 2rem 1rem;
+  text-align: center;
+  color: #a8b8d0;
+  font-size: 0.9rem;
+}
+
+.Dex-message {
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-end;
+}
+
+.Dex-message.out {
+  justify-content: flex-end;
+}
+
+.Dex-bubble {
+  max-width: 70%;
+  padding: 0.6rem 0.75rem;
+  border-radius: 14px;
+  background: rgba(0,209,255,0.16);
+  border: 1px solid rgba(0,209,255,0.3);
+}
+
+.Dex-message.in .Dex-bubble {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.Dex-text {
+  word-wrap: break-word;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+.Dex-time {
+  font-size: 0.7rem;
+  color: #a8b8d0;
+  margin-top: 0.25rem;
+  text-align: right;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.3rem;
+}
+
+.Dex-readStatus {
+  font-size: 0.65rem;
+  color: #00d1ff;
+  font-weight: 600;
+  letter-spacing: -1px;
+}
+
+.Dex-deleteMsg {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(239,68,68,0.1);
+  color: #ff6b6b;
+  font-size: 1rem;
+  cursor: pointer;
+  opacity: 0;
+  transition: all 0.2s;
+}
+
+.Dex-message.out:hover .Dex-deleteMsg {
+  opacity: 1;
+}
+
+.Dex-deleteMsg:hover {
+  background: rgba(239,68,68,0.2);
+}
+
+.Dex-inputBar {
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+.Dex-inputBar input {
+  flex: 1;
+  padding: 0.6rem 0.75rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.03);
+  color: #e6eef8;
+}
+
+.Dex-inputBar input::placeholder {
+  color: #a8b8d0;
+}
+
+.Dex-empty {
+  padding: 2rem 1rem;
+  text-align: center;
+  color: #a8b8d0;
+  font-size: 0.95rem;
+}
+
+.btn {
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  border: 1px solid rgba(0,209,255,0.3);
+  background: rgba(0,209,255,0.18);
+  color: #e6eef8;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn:hover {
+  background: rgba(0,209,255,0.28);
+  border-color: rgba(0,209,255,0.5);
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+@media (max-width: 900px) {
+  .Dex-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .Dex-searchToggle {
+    display: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .Dex-root {
+    padding: 1rem;
+  }
+
+  .Dex-layout {
+    min-height: 400px;
+  }
+
+  .Dex-bubble {
+    max-width: 85%;
+  }
+
+  .Dex-sidebar {
+    display: none;
+  }
+}
